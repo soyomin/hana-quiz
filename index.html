@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>花のつくり暗記ゲーム</title>
-<meta name="theme-color" content="#5FA8DE">
+<meta name="theme-color" content="#8FCBEA">
 <meta name="description" content="花の構造・虫媒花風媒花・花粉の形を覚えるクイズゲーム">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/favicon.png">
@@ -14,58 +14,61 @@
 <meta name="apple-mobile-web-app-title" content="花のつくり">
 <style>
   :root{
-    --bg:#EAF6FD;
-    --bg-grid:#E1F1FC;
-    --gingham-a: rgba(94,169,222,.24);
-    --gingham-b: rgba(94,169,222,.13);
+    --bg:#F5FBFF;
+    --bg-grid:#ECF7FD;
+    --gingham: #CDE9F7;
+    --gingham-base: #FFFFFF;
     --card:#FFFFFF;
-    --ink:#33495A;
-    --ink-soft:#6F93AA;
-    --border:#CFE7F7;
-    --accent:#5FA8DE;     /* UIのメインカラー(水色) */
-    --accent-2:#FFC94D;   /* おしべ色・ハイライト */
-    --petal:#FF9EC3;      /* 花びら色 */
-    --sage:#82D9AF;       /* がく色 */
-    --pistil:#3D5A80;     /* めしべ色 */
-    --good:#4FBE8C;
-    --bad:#F2897D;
-    --shadow: 0 2px 6px rgba(95,168,222,.12), 0 10px 26px rgba(95,168,222,.18);
+    --ink:#3E5468;
+    --ink-soft:#88A9BB;
+    --border:#DFEFF9;
+    --accent:#8FCBEA;     /* UIのメインカラー(薄い水色) */
+    --accent-deep:#4E98C9;  /* ボタン・強調文字用の少し濃い水色 */
+    --accent-2:#FFD37A;   /* おしべ色・ハイライト */
+    --petal:#FFB4D2;      /* 花びら色 */
+    --sage:#A3E2C4;       /* がく色 */
+    --pistil:#4A6C8C;     /* めしべ色 */
+    --good:#6FCB9E;
+    --bad:#F4A79C;
+    --shadow: 0 2px 6px rgba(160,208,235,.16), 0 10px 24px rgba(160,208,235,.22);
   }
   :root[data-theme="dark"]{
-    --bg:#15212C;
-    --bg-grid:#1C2C39;
-    --gingham-a: rgba(111,187,239,.16);
-    --gingham-b: rgba(111,187,239,.08);
-    --card:#1E2F3C;
-    --ink:#E8F5FC;
-    --ink-soft:#9BC2DA;
-    --border:#2D4356;
-    --accent:#6FBBEF;
-    --accent-2:#FFD873;
-    --petal:#FFACCF;
-    --sage:#7BD3A5;
-    --pistil:#CDE3F6;
-    --good:#63D19B;
-    --bad:#FF9686;
+    --bg:#17232E;
+    --bg-grid:#1E2E3B;
+    --gingham: #24384A;
+    --gingham-base: #17232E;
+    --card:#20313E;
+    --ink:#EAF5FC;
+    --ink-soft:#9DC3D8;
+    --border:#2E4558;
+    --accent:#8ECBEE;
+    --accent-deep:#9ED9F5;
+    --accent-2:#FFDD94;
+    --petal:#FFB8D5;
+    --sage:#93DBB8;
+    --pistil:#CFE3F5;
+    --good:#7BD8AB;
+    --bad:#FFA697;
     --shadow: 0 2px 6px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.42);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#15212C;
-      --bg-grid:#1C2C39;
-      --gingham-a: rgba(111,187,239,.16);
-      --gingham-b: rgba(111,187,239,.08);
-      --card:#1E2F3C;
-      --ink:#E8F5FC;
-      --ink-soft:#9BC2DA;
-      --border:#2D4356;
-      --accent:#6FBBEF;
-      --accent-2:#FFD873;
-      --petal:#FFACCF;
-      --sage:#7BD3A5;
-      --pistil:#CDE3F6;
-      --good:#63D19B;
-      --bad:#FF9686;
+      --bg:#17232E;
+      --bg-grid:#1E2E3B;
+      --gingham: #24384A;
+      --gingham-base: #17232E;
+      --card:#20313E;
+      --ink:#EAF5FC;
+      --ink-soft:#9DC3D8;
+      --border:#2E4558;
+      --accent:#8ECBEE;
+      --accent-deep:#9ED9F5;
+      --accent-2:#FFDD94;
+      --petal:#FFB8D5;
+      --sage:#93DBB8;
+      --pistil:#CFE3F5;
+      --good:#7BD8AB;
+      --bad:#FFA697;
       --shadow: 0 2px 6px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.42);
     }
   }
@@ -74,12 +77,12 @@
   body{
     margin:0;
     min-height:100vh;
-    background-color:var(--bg);
+    background-color:var(--gingham-base);
     background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 19px, var(--gingham-a) 19px, var(--gingham-a) 38px),
-      repeating-linear-gradient(90deg, transparent, transparent 19px, var(--gingham-a) 19px, var(--gingham-a) 38px),
-      repeating-linear-gradient(0deg, transparent, transparent 9px, var(--gingham-b) 9px, var(--gingham-b) 19px),
-      repeating-linear-gradient(90deg, transparent, transparent 9px, var(--gingham-b) 9px, var(--gingham-b) 19px);
+      linear-gradient(45deg, var(--gingham) 25%, transparent 25%, transparent 75%, var(--gingham) 75%, var(--gingham) 100%),
+      linear-gradient(45deg, var(--gingham) 25%, transparent 25%, transparent 75%, var(--gingham) 75%, var(--gingham) 100%);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
     background-attachment: fixed;
     color:var(--ink);
     font-family: "BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic Medium","Yu Gothic","Hiragino Sans","Noto Sans JP",sans-serif;
@@ -98,9 +101,9 @@
     display:inline-block;
     font-size:12px;
     letter-spacing:.1em;
-    color:var(--accent);
+    color:var(--accent-deep);
     font-weight:700;
-    background:color-mix(in srgb, var(--accent) 14%, transparent);
+    background:color-mix(in srgb, var(--accent) 35%, transparent);
     padding:4px 14px;
     border-radius:999px;
   }
@@ -253,7 +256,7 @@
     font-size:16px;
     margin:10px 0 18px;
   }
-  .q-prompt b{ color:var(--accent); }
+  .q-prompt b{ color:var(--accent-deep); }
   .choices{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -273,7 +276,7 @@
     cursor:pointer;
     font-variant-numeric: tabular-nums;
   }
-  .choices button:hover{ border-color:var(--accent); }
+  .choices button:hover{ border-color:var(--accent-deep); }
   .choices button.correct{ background:color-mix(in srgb, var(--good) 25%, var(--card)); border-color:var(--good); }
   .choices button.wrong{ background:color-mix(in srgb, var(--bad) 25%, var(--card)); border-color:var(--bad); }
   .choices button:disabled{ cursor:default; }
@@ -295,7 +298,7 @@
     padding:11px 24px;
     border-radius:999px;
     border:none;
-    background:var(--accent);
+    background:var(--accent-deep);
     color:#fff;
     cursor:pointer;
   }
@@ -1063,8 +1066,7 @@ weakOnlyPolBtn.addEventListener('click', ()=>{ pOrder=[]; area.innerHTML=""; });
 const POLLEN = [
   { name:"マツ",   type:"風媒花", shape:"two-sacs", desc:"丸い本体の両側に空気袋(気嚢)が2つ。軽くて風でよく飛ぶ" },
   { name:"スギ",   type:"風媒花", shape:"one-bump", desc:"ほぼ球形で、表面に小さな突起が1つだけ" },
-  { name:"イネ",   type:"風媒花", shape:"smooth",   desc:"小さくなめらかな球形。表面に模様がほとんどない" },
-  { name:"トウモロコシ", type:"風媒花", shape:"smooth", desc:"イネと同じくなめらかな球形。軽くて数が多い" },
+  { name:"トウモロコシ", type:"風媒花", shape:"smooth", desc:"小さくなめらかな球形。表面に模様がほとんどなく、軽くて数が多い" },
   { name:"アブラナ", type:"虫媒花", shape:"net-oval", desc:"俵形（だ円形）で、表面に網目もようがある" },
   { name:"アサガオ", type:"虫媒花", shape:"spiky",   desc:"球形で、表面全体にとげ状の突起がある" },
   { name:"ヘチマ・カボチャ", type:"虫媒花", shape:"spiky-big", desc:"大きめの球形で、とげが多くネバネバする" },
