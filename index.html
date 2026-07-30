@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>花のつくり暗記ゲーム</title>
+<style>
+  :root{
+    --bg:#F2F5EE;
+    --bg-grid:#E3EAD7;
+    --card:#FFFFFF;
+    --ink:#1F2E22;
+    --ink-soft:#55655A;
+    --border:#D8E2CB;
+    --accent:#E4572E;     /* 花びら色 */
+    --accent-2:#D9A441;   /* おしべ色 */
+    --sage:#7A9B76;       /* がく色 */
+    --pistil:#3A4F3D;     /* めしべ色 */
+    --good:#3F8A52;
+    --bad:#C4483A;
+    --shadow: 0 1px 2px rgba(31,46,34,.06), 0 6px 16px rgba(31,46,34,.08);
+  }
+  :root[data-theme="dark"]{
+    --bg:#121A14;
+    --bg-grid:#18221A;
+    --card:#1B241C;
+    --ink:#E9F0E3;
+    --ink-soft:#A9B9A0;
+    --border:#2A3A28;
+    --accent:#F0714B;
+    --accent-2:#E8B65B;
+    --sage:#8FB389;
+    --pistil:#DCE7D6;
+    --good:#63B579;
+    --bad:#E4795F;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121A14;
+      --bg-grid:#18221A;
+      --card:#1B241C;
+      --ink:#E9F0E3;
+      --ink-soft:#A9B9A0;
+      --border:#2A3A28;
+      --accent:#F0714B;
+      --accent-2:#E8B65B;
+      --sage:#8FB389;
+      --pistil:#DCE7D6;
+      --good:#63B579;
+      --bad:#E4795F;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+    }
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0/28px 28px,
+      var(--bg);
+    color:var(--ink);
+    font-family: "BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic Medium","Yu Gothic","Hiragino Sans","Noto Sans JP",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:28px 18px 80px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:22px;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  }
+  h1{
+    margin:6px 0 4px;
+    font-size:clamp(24px,5vw,32px);
+    text-wrap:balance;
+    letter-spacing:.02em;
+  }
+  .sub{
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+
+  nav.tabs{
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    margin:22px 0 22px;
+    flex-wrap:wrap;
+  }
+  nav.tabs button{
+    font:inherit;
+    font-size:14px;
+    font-weight:700;
+    padding:10px 16px;
+    border-radius:10px 10px 0 0;
+    border:1px solid var(--border);
+    border-bottom:none;
+    background:var(--bg-grid);
+    color:var(--ink-soft);
+    cursor:pointer;
+    position:relative;
+    top:1px;
+  }
+  nav.tabs button[aria-selected="true"]{
+    background:var(--card);
+    color:var(--ink);
+    box-shadow: var(--shadow);
+    border-bottom:1px solid var(--card);
+  }
+  nav.tabs button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:0 12px 12px 12px;
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+  .panel[hidden]{ display:none; }
+
+  /* --- flashcards --- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:14px;
+  }
+  .flip-card{
+    perspective:1000px;
+    height:200px;
+    cursor:pointer;
+  }
+  .flip-card .inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform .5s;
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .inner{ transform:rotateY(180deg); }
+  .face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    border-radius:10px;
+    border:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+    background:var(--bg-grid);
+  }
+  .face.front .name{
+    font-size:17px;
+    font-weight:700;
+  }
+  .face.front .fam{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    margin-top:4px;
+  }
+  .face.back{
+    transform:rotateY(180deg);
+    background:var(--card);
+    gap:2px;
+  }
+  .face.back .row{
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+    max-width:150px;
+    font-size:13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .face.back .row .label{ color:var(--ink-soft); }
+  .face.back .row .val{ font-weight:700; }
+  .face.back .pollinate{
+    margin-top:6px;
+    font-size:11px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:color-mix(in srgb, var(--sage) 22%, transparent);
+    color:var(--sage);
+    font-weight:700;
+  }
+
+  /* schematic diagram */
+  svg.diagram{ width:64px; height:64px; margin-bottom:4px; }
+
+  /* --- quiz --- */
+  .quiz-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:14px;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .quiz-head .score{
+    font-weight:700;
+    color:var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .q-card{
+    text-align:center;
+  }
+  .q-diagram{ width:110px; height:110px; margin:0 auto 10px; display:block; }
+  .q-flower{ font-size:20px; font-weight:700; margin-bottom:2px; }
+  .q-prompt{
+    font-size:16px;
+    margin:10px 0 18px;
+  }
+  .q-prompt b{ color:var(--accent); }
+  .choices{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    max-width:360px;
+    margin:0 auto;
+  }
+  .choices button{
+    font:inherit;
+    font-size:16px;
+    font-weight:700;
+    padding:14px 6px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--bg-grid);
+    color:var(--ink);
+    cursor:pointer;
+    font-variant-numeric: tabular-nums;
+  }
+  .choices button:hover{ border-color:var(--accent); }
+  .choices button.correct{ background:color-mix(in srgb, var(--good) 25%, var(--card)); border-color:var(--good); }
+  .choices button.wrong{ background:color-mix(in srgb, var(--bad) 25%, var(--card)); border-color:var(--bad); }
+  .choices button:disabled{ cursor:default; }
+
+  .feedback{
+    min-height:22px;
+    margin-top:14px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .feedback.good{ color:var(--good); }
+  .feedback.bad{ color:var(--bad); }
+
+  .next-btn{
+    display:block;
+    margin:18px auto 0;
+    font:inherit;
+    font-weight:700;
+    padding:10px 22px;
+    border-radius:10px;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+  }
+  .next-btn:focus-visible, .choices button:focus-visible, .toggle button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .toggle{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .toggle button{
+    font:inherit;
+    font-size:13px;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--bg-grid);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .toggle button[aria-pressed="true"]{
+    background:var(--sage);
+    color:#fff;
+    border-color:var(--sage);
+  }
+
+  /* pollination reference */
+  .compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:520px){ .compare{ grid-template-columns:1fr; } }
+  .compare .col{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px;
+    background:var(--bg-grid);
+  }
+  .compare h3{
+    margin:0 0 8px;
+    font-size:15px;
+  }
+  .compare ul{ margin:0; padding-left:1.1em; font-size:13.5px; line-height:1.7; }
+  .compare .examples{
+    margin-top:10px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .compare .examples b{ color:var(--ink); }
+
+  footer.note{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:22px;
+  }
+
+  /* --- pollen --- */
+  .pollen-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:14px;
+    margin-top:16px;
+  }
+  .pollen-card{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--bg-grid);
+    padding:12px;
+    text-align:center;
+  }
+  .pollen-card svg{ width:72px; height:72px; margin-bottom:6px; }
+  .pollen-card .pname{ font-weight:700; font-size:14px; }
+  .pollen-card .ptype{
+    display:inline-block;
+    margin:4px 0 6px;
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:999px;
+  }
+  .pollen-card .ptype.insect{ background:color-mix(in srgb, var(--accent) 20%, transparent); color:var(--accent); }
+  .pollen-card .ptype.wind{ background:color-mix(in srgb, var(--sage) 22%, transparent); color:var(--sage); }
+  .pollen-card .pdesc{ font-size:12px; color:var(--ink-soft); line-height:1.5; }
+
+  /* --- progress --- */
+  .progress-summary{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  .stat-tile{
+    flex:1;
+    min-width:110px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px;
+    text-align:center;
+    background:var(--bg-grid);
+  }
+  .stat-tile .num{
+    font-size:24px;
+    font-weight:700;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-tile .lbl{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .prog-section h3{
+    font-size:14px;
+    margin:22px 0 10px;
+  }
+  .prog-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    margin-bottom:7px;
+  }
+  .prog-row .name{
+    width:120px;
+    flex-shrink:0;
+  }
+  .prog-bar-bg{
+    flex:1;
+    height:8px;
+    border-radius:999px;
+    background:var(--border);
+    overflow:hidden;
+  }
+  .prog-bar-fill{
+    display:block;
+    height:100%;
+    border-radius:999px;
+  }
+  .prog-row .cnt{
+    width:56px;
+    text-align:right;
+    font-variant-numeric: tabular-nums;
+    color:var(--ink-soft);
+    font-size:12px;
+    flex-shrink:0;
+  }
+  .weak-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:6px;
+    background:var(--bg-grid);
+    font-size:13px;
+  }
+  .weak-item .wc{
+    font-weight:700;
+    color:var(--bad);
+    font-variant-numeric: tabular-nums;
+    white-space:nowrap;
+  }
+  .empty-msg{
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:8px 0 4px;
+  }
+  .reset-btn{
+    display:block;
+    margin:26px auto 0;
+    font:inherit;
+    font-size:13px;
+    font-weight:700;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--bad);
+    background:transparent;
+    color:var(--bad);
+    cursor:pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .flip-card .inner{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">理科 / 花のつくり</div>
+    <h1>花のつくり暗記ゲーム</h1>
+    <div class="sub">おしべ・めしべ・花びら・がくの数を、8種類の花でおぼえよう</div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="cards">① おぼえる</button>
+    <button role="tab" aria-selected="false" data-tab="quiz">② 数字テスト</button>
+    <button role="tab" aria-selected="false" data-tab="pollinate">③ 虫媒花・風媒花</button>
+    <button role="tab" aria-selected="false" data-tab="pollinateQuiz">④ 虫媒花クイズ</button>
+    <button role="tab" aria-selected="false" data-tab="pollen">⑤ 花粉の形</button>
+    <button role="tab" aria-selected="false" data-tab="pollenQuiz">⑥ 花粉クイズ</button>
+    <button role="tab" aria-selected="false" data-tab="final">🏆 まとめテスト</button>
+    <button role="tab" aria-selected="false" data-tab="progress">📊 達成度</button>
+  </nav>
+
+  <section class="panel" id="panel-cards" role="tabpanel">
+    <div class="grid" id="cardGrid"></div>
+  </section>
+
+  <section class="panel" id="panel-quiz" role="tabpanel" hidden>
+    <div class="toggle" style="margin-bottom:8px;">
+      <button id="weakOnlyNumBtn" aria-pressed="false">🔁 苦手だけ出題</button>
+    </div>
+    <div class="toggle" id="quizScope"></div>
+    <div class="quiz-head">
+      <span>問題 <span id="qNum">1</span> / <span id="qTotal">–</span></span>
+      <span class="score">正解 <span id="qScore">0</span> <span id="qStreak" style="color:var(--accent-2);"></span></span>
+    </div>
+    <div class="q-card">
+      <svg class="q-diagram" id="qDiagram"></svg>
+      <div class="q-flower" id="qFlowerName"></div>
+      <div class="q-prompt" id="qPrompt"></div>
+      <div class="choices" id="qChoices"></div>
+      <div class="feedback" id="qFeedback"></div>
+      <button class="next-btn" id="qNext" hidden>次の問題 →</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-pollinate" role="tabpanel" hidden>
+    <div class="compare">
+      <div class="col">
+        <h3>🐝 虫媒花（ちゅうばいか）</h3>
+        <ul>
+          <li>花びらが大きく、色があざやか</li>
+          <li>においや蜜（みつ）で虫を呼ぶ</li>
+          <li>花粉はネバネバ・トゲトゲして虫の体につきやすい</li>
+          <li>花粉の量は風媒花より少なめでよい</li>
+        </ul>
+        <div class="examples"><b>今回の8種はすべて虫媒花</b>：ジャガイモ・アブラナ・チューリップ・ハナショウブ・アサガオ・エンドウ・サクラ・タンポポ</div>
+      </div>
+      <div class="col">
+        <h3>🌾 風媒花（ふうばいか）</h3>
+        <ul>
+          <li>花びらが目立たない・地味、または無い</li>
+          <li>においや蜜はほとんど無い</li>
+          <li>花粉は軽くてサラサラ、大量につくる</li>
+          <li>風にとばして遠くまで届ける</li>
+        </ul>
+        <div class="examples"><b>代表例</b>：イネ・ムギ・トウモロコシ・マツ・スギ</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-pollinateQuiz" role="tabpanel" hidden>
+    <div class="toggle" style="margin-bottom:0;">
+      <button id="startPollinateQuiz" aria-pressed="false">クイズを出す →</button>
+      <button id="weakOnlyPolBtn" aria-pressed="false">🔁 苦手だけ出題</button>
+    </div>
+    <div id="pollinateQuizArea"></div>
+  </section>
+
+  <section class="panel" id="panel-pollen" role="tabpanel" hidden>
+    <div class="compare">
+      <div class="col">
+        <h3>🐝 虫媒花の花粉</h3>
+        <ul>
+          <li>表面にとげ状の突起があり、ザラザラ・ネバネバ</li>
+          <li>虫の体にくっつきやすい形</li>
+          <li>比較的つぶが大きい</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>🌾 風媒花の花粉</h3>
+        <ul>
+          <li>表面がなめらか、または小さい突起が1つ程度</li>
+          <li>軽くて風に乗りやすい（マツは空気袋つき）</li>
+          <li>つぶが小さく、数がとても多い</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pollen-grid" id="pollenGrid"></div>
+  </section>
+
+  <section class="panel" id="panel-pollenQuiz" role="tabpanel" hidden>
+    <div class="toggle" style="margin-bottom:0;">
+      <button id="startPollenQuiz" aria-pressed="false">クイズを出す →</button>
+      <button id="weakOnlyPolnBtn" aria-pressed="false">🔁 苦手だけ出題</button>
+    </div>
+    <div id="pollenQuizArea"></div>
+  </section>
+
+  <section class="panel" id="panel-final" role="tabpanel" hidden>
+    <div id="finalIntro">
+      <p style="margin:0 0 14px; font-size:14px; color:var(--ink-soft);">数字・虫媒花風媒花・花粉の形をぜんぶ混ぜた本番形式のテストです。全問終わると称号がもらえます。</p>
+      <button class="next-btn" id="startFinalTest" style="margin:0;">まとめテストを始める →</button>
+    </div>
+    <div id="finalArea"></div>
+  </section>
+
+  <section class="panel" id="panel-progress" role="tabpanel" hidden>
+    <div class="progress-summary" id="progressSummary"></div>
+    <div class="prog-section">
+      <h3>🔥 苦手ランキング（まちがいが多い順）</h3>
+      <div id="weakList"></div>
+    </div>
+    <div class="prog-section">
+      <h3>数字テストの達成度</h3>
+      <div id="numProgress"></div>
+    </div>
+    <div class="prog-section">
+      <h3>虫媒花・風媒花クイズの達成度</h3>
+      <div id="polProgress"></div>
+    </div>
+    <div class="prog-section">
+      <h3>花粉クイズの達成度</h3>
+      <div id="polnProgress"></div>
+    </div>
+    <button class="reset-btn" id="resetStatsBtn">記録をリセット</button>
+  </section>
+
+  <footer class="note">写真の手書きノートをもとに作成。ジャガイモのおしべは「5本」で登録（赤字修正メモに合わせて確認済み）。</footer>
+</div>
+
+<script>
+const FLOWERS = [
+  { name:"ジャガイモ", fam:"ナス科", sepal:5, petal:5, stamen:5, pistil:1, note:"星形に開く花びら" },
+  { name:"アブラナ",   fam:"アブラナ科", sepal:4, petal:4, stamen:6, pistil:1, note:"おしべ6本(長4短2)" },
+  { name:"チューリップ", fam:"ユリ科", sepal:3, petal:3, stamen:6, pistil:1, note:"がくも花びらのように見える" },
+  { name:"ハナショウブ", fam:"アヤメ科", sepal:3, petal:3, stamen:3, pistil:1, note:"めしべの柱頭が3裂" },
+  { name:"アサガオ",   fam:"ヒルガオ科", sepal:5, petal:5, stamen:5, pistil:1, note:"花びらは合弁（くっついている）" },
+  { name:"エンドウ",   fam:"マメ科", sepal:5, petal:5, stamen:10, pistil:1, note:"蝶形の花、おしべ10本(9+1)" },
+  { name:"サクラ",     fam:"バラ科", sepal:5, petal:5, stamen:30, pistil:1, note:"おしべは多数(約30本前後)" },
+  { name:"タンポポ",   fam:"キク科", sepal:5, petal:5, stamen:5, pistil:1, note:"1つの小花あたりの数。頭花は小花の集合" },
+];
+const PARTS = [
+  { key:"sepal", label:"がく", unit:"枚", color:"var(--sage)" },
+  { key:"petal", label:"花びら", unit:"枚", color:"var(--accent)" },
+  { key:"stamen", label:"おしべ", unit:"本", color:"var(--accent-2)" },
+  { key:"pistil", label:"めしべ", unit:"本", color:"var(--pistil)" },
+];
+
+function diagramSVG(f, size){
+  const c = size/2;
+  const rSepal = size*0.46, rPetal = size*0.34, rStamen = size*0.16;
+  let parts = "";
+  for(let i=0;i<f.sepal;i++){
+    const a = (i/f.sepal)*2*Math.PI - Math.PI/2;
+    parts += `<line x1="${c}" y1="${c}" x2="${c+rSepal*Math.cos(a)}" y2="${c+rSepal*Math.sin(a)}" stroke="var(--sage)" stroke-width="${size*0.045}" stroke-linecap="round" opacity="0.55"/>`;
+  }
+  const petalCount = Math.min(f.petal, 12);
+  for(let i=0;i<petalCount;i++){
+    const a = (i/petalCount)*2*Math.PI - Math.PI/2;
+    parts += `<ellipse cx="${c+rPetal*Math.cos(a)}" cy="${c+rPetal*Math.sin(a)}" rx="${size*0.11}" ry="${size*0.16}" transform="rotate(${a*180/Math.PI+90} ${c+rPetal*Math.cos(a)} ${c+rPetal*Math.sin(a)})" fill="var(--accent)" opacity="0.85"/>`;
+  }
+  const stamenCount = Math.min(f.stamen, 20);
+  for(let i=0;i<stamenCount;i++){
+    const a = (i/stamenCount)*2*Math.PI - Math.PI/2;
+    parts += `<circle cx="${c+rStamen*Math.cos(a)}" cy="${c+rStamen*Math.sin(a)}" r="${size*0.028}" fill="var(--accent-2)"/>`;
+  }
+  parts += `<circle cx="${c}" cy="${c}" r="${size*0.05}" fill="var(--pistil)"/>`;
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${parts}</svg>`;
+}
+
+/* ---------- Sound ---------- */
+let audioCtx;
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playCorrect(){
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  [523.25, 659.25, 987.77].forEach((freq, i)=>{
+    const t = now + i*0.1;
+    [1, 1.5].forEach((mult, j)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq*mult;
+      const peak = j===0 ? 0.42 : 0.16;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(peak, t+0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.32);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t+0.34);
+    });
+  });
+}
+function playWrong(){
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  [0, 0.16].forEach((offset, i)=>{
+    const t = now + offset;
+    const startFreq = i===0 ? 220 : 164;
+    const endFreq = i===0 ? 130 : 98;
+    ['sawtooth','square'].forEach((type, j)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(startFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, t+0.22);
+      const peak = j===0 ? 0.32 : 0.14;
+      gain.gain.setValueAtTime(peak, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.26);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t+0.28);
+    });
+  });
+}
+function playTap(){
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 700;
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now+0.06);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now+0.07);
+}
+function playFanfare(pct){
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  const notes = pct >= 0.8
+    ? [523.25, 659.25, 783.99, 1046.5]
+    : [392, 349.23, 329.63];
+  notes.forEach((freq,i)=>{
+    const t = now + i*0.13;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.linearRampToValueAtTime(0.3, t+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t+0.35);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t+0.37);
+  });
+}
+
+/* ---------- Tabs ---------- */
+const tabs = document.querySelectorAll('nav.tabs button');
+const panels = {
+  cards:document.getElementById('panel-cards'),
+  quiz:document.getElementById('panel-quiz'),
+  pollinate:document.getElementById('panel-pollinate'),
+  pollinateQuiz:document.getElementById('panel-pollinateQuiz'),
+  pollen:document.getElementById('panel-pollen'),
+  pollenQuiz:document.getElementById('panel-pollenQuiz'),
+  final:document.getElementById('panel-final'),
+  progress:document.getElementById('panel-progress'),
+};
+tabs.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    playTap();
+    tabs.forEach(b=>b.setAttribute('aria-selected', b===btn ? 'true':'false'));
+    Object.entries(panels).forEach(([k,el])=> el.hidden = (k!==btn.dataset.tab));
+    if(btn.dataset.tab === 'progress') renderProgress();
+  });
+});
+
+/* ---------- Stats (localStorage) ---------- */
+function loadStats(){
+  try{ return JSON.parse(localStorage.getItem('hana-stats-v1')) || {}; }
+  catch(e){ return {}; }
+}
+let STATS = loadStats();
+function saveStats(){
+  try{ localStorage.setItem('hana-stats-v1', JSON.stringify(STATS)); }catch(e){}
+}
+function recordStat(key, correct){
+  const s = STATS[key] || (STATS[key] = {c:0,w:0});
+  if(correct) s.c++; else s.w++;
+  saveStats();
+}
+function getStat(key){ return STATS[key] || {c:0,w:0}; }
+function isWeak(key){
+  const s = getStat(key);
+  return (s.c + s.w) > 0 && s.w > 0 && s.w >= s.c;
+}
+function shuffleArr(arr){
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+/* ---------- Encouragement ---------- */
+const PRAISE = [
+  "やった！正解！","さすが！","その調子！","バッチリ！","天才か！","完璧！",
+  "いいね、その勢い！","冴えてる！","覚えてきたね！","お見事！","ナイス！","一発正解！"
+];
+const CONSOLE_MSG = [
+  "おしい！次いこう","ドンマイ、切り替えて","大丈夫、次で挽回","ここが伸びしろ！",
+  "今のはメモしておこう","惜しい、もう一歩","気にしない、次！","ここ覚えたら勝ち"
+];
+let globalStreak = 0, globalBest = 0;
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function pickVaried(arr, lastRef){
+  if(arr.length<=1) return arr[0];
+  let choice;
+  do{ choice = pick(arr); }while(choice === lastRef.v);
+  lastRef.v = choice;
+  return choice;
+}
+const praiseRef = {v:""}, consoleRef = {v:""};
+function streakNote(){
+  if(globalStreak>0 && globalStreak%5===0) return `🔥 ${globalStreak}連続正解！すごい集中力！`;
+  if(globalStreak>0 && globalStreak%3===0) return `⚡ ${globalStreak}連続正解中！`;
+  return "";
+}
+function noteResult(isCorrect){
+  if(isCorrect){ globalStreak++; if(globalStreak>globalBest) globalBest=globalStreak; }
+  else globalStreak = 0;
+}
+
+/* ---------- Flashcards ---------- */
+const cardGrid = document.getElementById('cardGrid');
+FLOWERS.forEach(f=>{
+  const card = document.createElement('div');
+  card.className = 'flip-card';
+  card.innerHTML = `
+    <div class="inner">
+      <div class="face front">
+        <svg class="diagram" viewBox="0 0 64 64"></svg>
+        <div class="name">${f.name}</div>
+        <div class="fam">${f.fam}</div>
+      </div>
+      <div class="face back">
+        ${PARTS.map(p=>`<div class="row"><span class="label">${p.label}</span><span class="val">${f[p.key]}${p.unit}</span></div>`).join('')}
+        <div class="pollinate">虫媒花</div>
+      </div>
+    </div>`;
+  card.querySelector('.face.front svg').outerHTML = diagramSVG(f,64).replace('<svg', '<svg class="diagram"');
+  card.addEventListener('click', ()=>{ playTap(); card.classList.toggle('flipped'); });
+  cardGrid.appendChild(card);
+});
+
+/* ---------- Quiz ---------- */
+const qDiagram = document.getElementById('qDiagram');
+const qFlowerName = document.getElementById('qFlowerName');
+const qPrompt = document.getElementById('qPrompt');
+const qChoices = document.getElementById('qChoices');
+const qFeedback = document.getElementById('qFeedback');
+const qNext = document.getElementById('qNext');
+const qNum = document.getElementById('qNum');
+const qTotal = document.getElementById('qTotal');
+const qScore = document.getElementById('qScore');
+const qStreak = document.getElementById('qStreak');
+const quizScope = document.getElementById('quizScope');
+const weakOnlyNumBtn = document.getElementById('weakOnlyNumBtn');
+
+let weakOnlyNum = false;
+weakOnlyNumBtn.addEventListener('click', ()=>{
+  weakOnlyNum = !weakOnlyNum;
+  weakOnlyNumBtn.setAttribute('aria-pressed', weakOnlyNum ? 'true':'false');
+  resetQuiz();
+});
+
+let scopeSet = new Set(FLOWERS.map(f=>f.name));
+FLOWERS.forEach(f=>{
+  const b = document.createElement('button');
+  b.textContent = f.name;
+  b.setAttribute('aria-pressed','true');
+  b.addEventListener('click', ()=>{
+    if(scopeSet.has(f.name) && scopeSet.size>1){ scopeSet.delete(f.name); b.setAttribute('aria-pressed','false'); }
+    else if(!scopeSet.has(f.name)){ scopeSet.add(f.name); b.setAttribute('aria-pressed','true'); }
+    resetQuiz();
+  });
+  quizScope.appendChild(b);
+});
+
+let quizQueue = [], qIndex = 0, correctCount = 0, answered = false;
+
+function buildQuizQueue(){
+  const pool = FLOWERS.filter(f=>scopeSet.has(f.name));
+  let items = [];
+  pool.forEach(f=> PARTS.forEach(p=> items.push({f,p})));
+  if(weakOnlyNum){
+    items = items.filter(({f,p})=> isWeak(`num|${f.name}|${p.key}`));
+  }
+  return shuffleArr(items);
+}
+
+function resetQuiz(){
+  quizQueue = buildQuizQueue();
+  qIndex = 0; correctCount = 0;
+  qTotal.textContent = quizQueue.length;
+  qScore.textContent = "0";
+  renderQuestion();
+}
+
+function choiceSet(correct){
+  const set = new Set([correct]);
+  while(set.size<4){
+    const delta = Math.floor(Math.random()*7)-3;
+    let v = correct + delta;
+    if(v<1) v = correct + Math.abs(delta) + 1;
+    set.add(v);
+  }
+  return [...set].sort(()=>Math.random()-0.5);
+}
+
+function renderQuestion(){
+  if(weakOnlyNum && quizQueue.length === 0){
+    qFlowerName.textContent = "";
+    qPrompt.innerHTML = "🎉 苦手な項目はありません！このまま調子を維持しよう";
+    qChoices.innerHTML = "";
+    qDiagram.innerHTML = "";
+    qFeedback.textContent = "";
+    qNext.hidden = true;
+    return;
+  }
+  if(qIndex >= quizQueue.length){
+    playFanfare(quizQueue.length ? correctCount/quizQueue.length : 0);
+    qFlowerName.textContent = "";
+    const pct = quizQueue.length ? correctCount/quizQueue.length : 0;
+    const tierMsg = pct===1 ? "🏆 満点！かんぺき！" : pct>=0.8 ? "🎉 すごい、あと少しで満点！" : pct>=0.5 ? "👍 半分以上できてる！この調子！" : "🌱 まだ伸びる！苦手だけ出題で復習しよう";
+    qPrompt.innerHTML = `全問終了！ 正解 <b>${correctCount} / ${quizQueue.length}</b><br>${tierMsg}`;
+    qChoices.innerHTML = "";
+    qDiagram.innerHTML = "";
+    qFeedback.textContent = "";
+    qNext.hidden = false;
+    qNext.textContent = "もう一度 →";
+    qNext.onclick = resetQuiz;
+    return;
+  }
+  answered = false;
+  const {f,p} = quizQueue[qIndex];
+  qNum.textContent = qIndex+1;
+  qFlowerName.textContent = f.name + `（${f.fam}）`;
+  qPrompt.innerHTML = `<b>${p.label}</b>の数はいくつ？`;
+  qDiagram.outerHTML = diagramSVG(f,110).replace('<svg','<svg id="qDiagram" class="q-diagram"');
+  qFeedback.textContent = "";
+  qFeedback.className = "feedback";
+  qNext.hidden = true;
+
+  const choices = choiceSet(f[p.key]);
+  qChoices.innerHTML = "";
+  choices.forEach(val=>{
+    const b = document.createElement('button');
+    b.textContent = val + p.unit;
+    b.addEventListener('click', ()=>{
+      if(answered) return;
+      answered = true;
+      const isCorrect = val === f[p.key];
+      b.classList.add(isCorrect ? 'correct':'wrong');
+      isCorrect ? playCorrect() : playWrong();
+      recordStat(`num|${f.name}|${p.key}`, isCorrect);
+      noteResult(isCorrect);
+      qStreak.textContent = globalStreak>=3 ? `🔥x${globalStreak}` : "";
+      if(isCorrect){
+        correctCount++; qScore.textContent = correctCount;
+        const note = streakNote();
+        qFeedback.textContent = note || pickVaried(PRAISE, praiseRef); qFeedback.className = "feedback good";
+      } else {
+        qFeedback.textContent = `${pickVaried(CONSOLE_MSG, consoleRef)}… 正解は ${f[p.key]}${p.unit}`; qFeedback.className = "feedback bad";
+        [...qChoices.children].find(c=>c.textContent===f[p.key]+p.unit)?.classList.add('correct');
+      }
+      [...qChoices.children].forEach(c=>c.disabled=true);
+      qNext.hidden = false;
+    });
+    qChoices.appendChild(b);
+  });
+  qNext.textContent = "次の問題 →";
+  qNext.onclick = ()=>{ qIndex++; renderQuestion(); };
+}
+
+resetQuiz();
+
+/* ---------- pollination mini quiz ---------- */
+const pollinateExamples = [
+  {name:"アブラナ", type:"虫媒花"}, {name:"サクラ", type:"虫媒花"}, {name:"タンポポ", type:"虫媒花"},
+  {name:"アサガオ", type:"虫媒花"}, {name:"イネ", type:"風媒花"}, {name:"トウモロコシ", type:"風媒花"},
+  {name:"スギ", type:"風媒花"}, {name:"マツ", type:"風媒花"},
+];
+const startBtn = document.getElementById('startPollinateQuiz');
+const weakOnlyPolBtn = document.getElementById('weakOnlyPolBtn');
+const area = document.getElementById('pollinateQuizArea');
+let pIndex = 0, pCorrect = 0, pOrder = [];
+let weakOnlyPol = false;
+weakOnlyPolBtn.addEventListener('click', ()=>{
+  weakOnlyPol = !weakOnlyPol;
+  weakOnlyPolBtn.setAttribute('aria-pressed', weakOnlyPol ? 'true':'false');
+});
+
+function shuffledPollinate(){
+  const pool = weakOnlyPol ? pollinateExamples.filter(it=> isWeak(`pol|${it.name}`)) : pollinateExamples;
+  return shuffleArr([...pool]);
+}
+
+function renderPollinateQ(){
+  if(pOrder.length === 0){
+    area.innerHTML = `<div class="q-card"><div class="q-prompt">🎉 苦手な項目はありません！</div></div>`;
+    return;
+  }
+  if(pIndex >= pOrder.length){
+    playFanfare(pOrder.length ? pCorrect/pOrder.length : 0);
+    const pct = pOrder.length ? pCorrect/pOrder.length : 0;
+    const tierMsg = pct===1 ? "🏆 満点！" : pct>=0.8 ? "🎉 いい調子！" : "🌱 苦手だけ出題で復習しよう";
+    area.innerHTML = `<div class="q-card"><div class="q-prompt">終了！ 正解 <b>${pCorrect} / ${pOrder.length}</b><br>${tierMsg}</div><button class="next-btn" id="pRestart">もう一度 →</button></div>`;
+    document.getElementById('pRestart').onclick = ()=>{ pOrder = shuffledPollinate(); pIndex=0; pCorrect=0; renderPollinateQ(); };
+    return;
+  }
+  const item = pOrder[pIndex];
+  area.innerHTML = `
+    <div class="q-card">
+      <div class="q-flower">${item.name}</div>
+      <div class="q-prompt">虫媒花？ それとも風媒花？</div>
+      <div class="choices" style="grid-template-columns:1fr 1fr;">
+        <button data-v="虫媒花">🐝 虫媒花</button>
+        <button data-v="風媒花">🌾 風媒花</button>
+      </div>
+      <div class="feedback" id="pFeedback"></div>
+      <button class="next-btn" id="pNext" hidden>次へ →</button>
+    </div>`;
+  const buttons = area.querySelectorAll('.choices button');
+  const fb = area.querySelector('#pFeedback');
+  const nextBtn = area.querySelector('#pNext');
+  buttons.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const isCorrect = b.dataset.v === item.type;
+      b.classList.add(isCorrect?'correct':'wrong');
+      isCorrect ? playCorrect() : playWrong();
+      recordStat(`pol|${item.name}`, isCorrect);
+      noteResult(isCorrect);
+      if(isCorrect){
+        pCorrect++;
+        fb.textContent = streakNote() || pickVaried(PRAISE, praiseRef); fb.className="feedback good";
+      }
+      else{
+        fb.textContent = `${pickVaried(CONSOLE_MSG, consoleRef)}… ${item.name}は${item.type}`; fb.className = "feedback bad";
+        [...buttons].find(x=>x.dataset.v===item.type)?.classList.add('correct');
+      }
+      buttons.forEach(x=>x.disabled=true);
+      nextBtn.hidden = false;
+    });
+  });
+  nextBtn.addEventListener('click', ()=>{ pIndex++; renderPollinateQ(); });
+}
+
+startBtn.addEventListener('click', ()=>{
+  pOrder = shuffledPollinate(); pIndex=0; pCorrect=0;
+  renderPollinateQ();
+});
+weakOnlyPolBtn.addEventListener('click', ()=>{ pOrder=[]; area.innerHTML=""; });
+
+/* ---------- pollen shapes ---------- */
+const POLLEN = [
+  { name:"マツ",   type:"風媒花", shape:"two-sacs", desc:"丸い本体の両側に空気袋(気嚢)が2つ。軽くて風でよく飛ぶ" },
+  { name:"スギ",   type:"風媒花", shape:"one-bump", desc:"ほぼ球形で、表面に小さな突起が1つだけ" },
+  { name:"イネ",   type:"風媒花", shape:"smooth",   desc:"小さくなめらかな球形。表面に模様がほとんどない" },
+  { name:"トウモロコシ", type:"風媒花", shape:"smooth", desc:"イネと同じくなめらかな球形。軽くて数が多い" },
+  { name:"アブラナ", type:"虫媒花", shape:"net-oval", desc:"俵形（だ円形）で、表面に網目もようがある" },
+  { name:"アサガオ", type:"虫媒花", shape:"spiky",   desc:"球形で、表面全体にとげ状の突起がある" },
+  { name:"ヘチマ・カボチャ", type:"虫媒花", shape:"spiky-big", desc:"大きめの球形で、とげが多くネバネバする" },
+];
+
+function pollenSVG(shape, size){
+  const c = size/2;
+  const insectColor = "var(--accent)";
+  const windColor = "var(--sage)";
+  let body = "";
+  switch(shape){
+    case "smooth": {
+      body = `<circle cx="${c}" cy="${c}" r="${size*0.28}" fill="${windColor}" opacity="0.85"/>`;
+      break;
+    }
+    case "one-bump": {
+      body = `<circle cx="${c}" cy="${c}" r="${size*0.30}" fill="${windColor}" opacity="0.85"/>
+        <circle cx="${c}" cy="${c-size*0.30}" r="${size*0.06}" fill="${windColor}"/>`;
+      break;
+    }
+    case "two-sacs": {
+      body = `<circle cx="${c}" cy="${c}" r="${size*0.22}" fill="${windColor}" opacity="0.9"/>
+        <ellipse cx="${c-size*0.30}" cy="${c}" rx="${size*0.17}" ry="${size*0.13}" fill="${windColor}" opacity="0.45"/>
+        <ellipse cx="${c+size*0.30}" cy="${c}" rx="${size*0.17}" ry="${size*0.13}" fill="${windColor}" opacity="0.45"/>`;
+      break;
+    }
+    case "net-oval": {
+      const rx=size*0.32, ry=size*0.22;
+      let net = "";
+      for(let i=-2;i<=2;i++){
+        net += `<line x1="${c-rx}" y1="${c+i*ry*0.35}" x2="${c+rx}" y2="${c+i*ry*0.35}" stroke="${insectColor}" stroke-width="${size*0.012}" opacity="0.6"/>`;
+      }
+      for(let i=-2;i<=2;i++){
+        net += `<line x1="${c+i*rx*0.35}" y1="${c-ry}" x2="${c+i*rx*0.35}" y2="${c+ry}" stroke="${insectColor}" stroke-width="${size*0.012}" opacity="0.6"/>`;
+      }
+      body = `<ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}" fill="${insectColor}" opacity="0.25"/>
+        <ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}" fill="none" stroke="${insectColor}" stroke-width="${size*0.02}"/>
+        <clipPath id="clip-${shape}-${size}"><ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}"/></clipPath>
+        <g clip-path="url(#clip-${shape}-${size})">${net}</g>`;
+      break;
+    }
+    case "spiky":
+    case "spiky-big": {
+      const r = shape === "spiky-big" ? size*0.30 : size*0.26;
+      const spikeLen = shape === "spiky-big" ? size*0.11 : size*0.08;
+      const n = 16;
+      let spikes = "";
+      for(let i=0;i<n;i++){
+        const a = (i/n)*2*Math.PI;
+        spikes += `<line x1="${c+r*Math.cos(a)}" y1="${c+r*Math.sin(a)}" x2="${c+(r+spikeLen)*Math.cos(a)}" y2="${c+(r+spikeLen)*Math.sin(a)}" stroke="${insectColor}" stroke-width="${size*0.022}" stroke-linecap="round"/>`;
+      }
+      body = `<circle cx="${c}" cy="${c}" r="${r}" fill="${insectColor}" opacity="0.85"/>${spikes}`;
+      break;
+    }
+  }
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
+}
+
+const pollenGrid = document.getElementById('pollenGrid');
+POLLEN.forEach(p=>{
+  const card = document.createElement('div');
+  card.className = 'pollen-card';
+  card.innerHTML = `
+    ${pollenSVG(p.shape,72)}
+    <div class="pname">${p.name}</div>
+    <div class="ptype ${p.type==='虫媒花'?'insect':'wind'}">${p.type}</div>
+    <div class="pdesc">${p.desc}</div>`;
+  pollenGrid.appendChild(card);
+});
+
+const startPollenBtn = document.getElementById('startPollenQuiz');
+const weakOnlyPolnBtn = document.getElementById('weakOnlyPolnBtn');
+const pollenQuizArea = document.getElementById('pollenQuizArea');
+let plIndex = 0, plCorrect = 0, plOrder = [];
+let weakOnlyPoln = false;
+weakOnlyPolnBtn.addEventListener('click', ()=>{
+  weakOnlyPoln = !weakOnlyPoln;
+  weakOnlyPolnBtn.setAttribute('aria-pressed', weakOnlyPoln ? 'true':'false');
+  plOrder = []; pollenQuizArea.innerHTML = "";
+});
+
+function shuffledPollen(){
+  const pool = weakOnlyPoln ? POLLEN.filter(it=> isWeak(`poln|${it.name}`)) : POLLEN;
+  return shuffleArr([...pool]);
+}
+
+function pollenChoiceNames(correct){
+  const set = new Set([correct]);
+  const names = POLLEN.map(p=>p.name);
+  while(set.size<4 && set.size<names.length){
+    set.add(names[Math.floor(Math.random()*names.length)]);
+  }
+  return [...set].sort(()=>Math.random()-0.5);
+}
+
+function renderPollenQ(){
+  if(plOrder.length === 0){
+    pollenQuizArea.innerHTML = `<div class="q-card"><div class="q-prompt">🎉 苦手な項目はありません！</div></div>`;
+    return;
+  }
+  if(plIndex >= plOrder.length){
+    playFanfare(plOrder.length ? plCorrect/plOrder.length : 0);
+    const pct = plOrder.length ? plCorrect/plOrder.length : 0;
+    const tierMsg = pct===1 ? "🏆 満点！" : pct>=0.8 ? "🎉 いい調子！" : "🌱 苦手だけ出題で復習しよう";
+    pollenQuizArea.innerHTML = `<div class="q-card"><div class="q-prompt">終了！ 正解 <b>${plCorrect} / ${plOrder.length}</b><br>${tierMsg}</div><button class="next-btn" id="plRestart">もう一度 →</button></div>`;
+    document.getElementById('plRestart').onclick = ()=>{ plOrder = shuffledPollen(); plIndex=0; plCorrect=0; renderPollenQ(); };
+    return;
+  }
+  const item = plOrder[plIndex];
+  pollenQuizArea.innerHTML = `
+    <div class="q-card">
+      ${pollenSVG(item.shape,110).replace('<svg','<svg class="q-diagram"')}
+      <div class="q-prompt">この花粉はどれ？</div>
+      <div class="choices" id="plChoices"></div>
+      <div class="feedback" id="plFeedback"></div>
+      <button class="next-btn" id="plNext" hidden>次へ →</button>
+    </div>`;
+  const choicesEl = pollenQuizArea.querySelector('#plChoices');
+  const fb = pollenQuizArea.querySelector('#plFeedback');
+  const nextBtn = pollenQuizArea.querySelector('#plNext');
+  pollenChoiceNames(item.name).forEach(name=>{
+    const b = document.createElement('button');
+    b.textContent = name;
+    b.addEventListener('click', ()=>{
+      const isCorrect = name === item.name;
+      b.classList.add(isCorrect?'correct':'wrong');
+      isCorrect ? playCorrect() : playWrong();
+      recordStat(`poln|${item.name}`, isCorrect);
+      noteResult(isCorrect);
+      if(isCorrect){
+        plCorrect++;
+        fb.innerHTML = `${streakNote() || pickVaried(PRAISE, praiseRef)}<br><span style="font-weight:400;">${item.desc}</span>`; fb.className="feedback good";
+      }
+      else{
+        fb.innerHTML = `${pickVaried(CONSOLE_MSG, consoleRef)}… 正解は${item.name}<br><span style="font-weight:400;">${item.desc}</span>`; fb.className = "feedback bad";
+        [...choicesEl.children].find(x=>x.textContent===item.name)?.classList.add('correct');
+      }
+      [...choicesEl.children].forEach(x=>x.disabled=true);
+      nextBtn.hidden = false;
+    });
+    choicesEl.appendChild(b);
+  });
+  nextBtn.addEventListener('click', ()=>{ plIndex++; renderPollenQ(); });
+}
+
+startPollenBtn.addEventListener('click', ()=>{
+  plOrder = shuffledPollen(); plIndex=0; plCorrect=0;
+  renderPollenQ();
+});
+
+/* ---------- Progress tab ---------- */
+function statLabel(key){
+  const parts = key.split('|');
+  const cat = parts[0];
+  if(cat==='num'){
+    const part = PARTS.find(p=>p.key===parts[2]);
+    return `${parts[1]}・${part ? part.label : parts[2]}`;
+  }
+  if(cat==='pol') return `${parts[1]}（虫媒花/風媒花）`;
+  if(cat==='poln') return `${parts[1]}（花粉の形）`;
+  return key;
+}
+function accuracyColor(acc){
+  if(acc>=0.8) return 'var(--good)';
+  if(acc>=0.5) return 'var(--accent-2)';
+  return 'var(--bad)';
+}
+function renderProgressRows(el, keys){
+  if(!keys.length){ el.innerHTML = `<div class="empty-msg">まだ解いていません</div>`; return; }
+  el.innerHTML = keys.map(k=>{
+    const s = STATS[k] || {c:0,w:0};
+    const total = s.c + s.w;
+    const acc = total ? s.c/total : 0;
+    const shortLabel = k.startsWith('num|') ? statLabel(k) : k.split('|')[1];
+    return `<div class="prog-row">
+      <span class="name">${shortLabel}</span>
+      <span class="prog-bar-bg"><span class="prog-bar-fill" style="width:${acc*100}%; background:${accuracyColor(acc)};"></span></span>
+      <span class="cnt">${s.c}/${total}</span>
+    </div>`;
+  }).join('');
+}
+function renderProgress(){
+  const allKeys = Object.keys(STATS);
+  const totalC = allKeys.reduce((s,k)=>s+STATS[k].c,0);
+  const totalW = allKeys.reduce((s,k)=>s+STATS[k].w,0);
+  const totalAttempts = totalC + totalW;
+  const overallAcc = totalAttempts ? Math.round((totalC/totalAttempts)*100) : 0;
+  const weakKeys = allKeys.filter(isWeak).sort((a,b)=> STATS[b].w - STATS[a].w);
+
+  document.getElementById('progressSummary').innerHTML = `
+    <div class="stat-tile"><div class="num">${totalAttempts}</div><div class="lbl">解いた問題数</div></div>
+    <div class="stat-tile"><div class="num">${overallAcc}%</div><div class="lbl">正答率</div></div>
+    <div class="stat-tile"><div class="num">${weakKeys.length}</div><div class="lbl">苦手な項目</div></div>
+    <div class="stat-tile"><div class="num">${globalBest}</div><div class="lbl">最高連続正解</div></div>
+  `;
+
+  const weakListEl = document.getElementById('weakList');
+  weakListEl.innerHTML = weakKeys.length
+    ? weakKeys.map(k=>{
+        const s = STATS[k];
+        return `<div class="weak-item"><span>${statLabel(k)}</span><span class="wc">${s.w}回まちがい（正解${s.c}）</span></div>`;
+      }).join('')
+    : `<div class="empty-msg">今のところ苦手な項目はありません。各クイズの「苦手だけ出題」で仕上げの復習ができます。</div>`;
+
+  const numKeys = [];
+  FLOWERS.forEach(f=> PARTS.forEach(p=> numKeys.push(`num|${f.name}|${p.key}`)));
+  renderProgressRows(document.getElementById('numProgress'), numKeys.filter(k=>{ const s=STATS[k]; return s && (s.c+s.w)>0; }));
+
+  const polKeys = pollinateExamples.map(it=>`pol|${it.name}`).filter(k=>{ const s=STATS[k]; return s && (s.c+s.w)>0; });
+  renderProgressRows(document.getElementById('polProgress'), polKeys);
+
+  const polnKeys = POLLEN.map(it=>`poln|${it.name}`).filter(k=>{ const s=STATS[k]; return s && (s.c+s.w)>0; });
+  renderProgressRows(document.getElementById('polnProgress'), polnKeys);
+}
+
+let resetArmed = false;
+const resetStatsBtn = document.getElementById('resetStatsBtn');
+resetStatsBtn.addEventListener('click', ()=>{
+  if(!resetArmed){
+    resetArmed = true;
+    resetStatsBtn.textContent = "本当に消す？もう一度押す";
+    setTimeout(()=>{ resetArmed=false; resetStatsBtn.textContent="記録をリセット"; }, 4000);
+  } else {
+    STATS = {}; saveStats(); resetArmed = false;
+    resetStatsBtn.textContent = "記録をリセット";
+    renderProgress();
+  }
+});
+
+/* ---------- Final mixed test ---------- */
+const finalIntro = document.getElementById('finalIntro');
+const finalArea = document.getElementById('finalArea');
+const startFinalBtn = document.getElementById('startFinalTest');
+let finalQueue = [], finalIndex = 0, finalCorrect = 0;
+
+function buildFinalQueue(){
+  const items = [];
+  FLOWERS.forEach(f=> PARTS.forEach(p=> items.push({kind:'num', f, p})));
+  pollinateExamples.forEach(it=> items.push({kind:'pol', item:it}));
+  POLLEN.forEach(it=> items.push({kind:'poln', item:it}));
+  shuffleArr(items);
+  return items.slice(0, 20);
+}
+
+function renderFinalQ(){
+  if(finalIndex >= finalQueue.length){
+    playFanfare(finalQueue.length ? finalCorrect/finalQueue.length : 0);
+    const pct = finalQueue.length ? finalCorrect/finalQueue.length : 0;
+    const title = pct===1 ? "🏆 満点マスター！" : pct>=0.85 ? "🥇 理科名人！" : pct>=0.7 ? "🥈 あと少しで名人！" : pct>=0.5 ? "🥉 半分クリア、この調子！" : "🌱 のびしろたっぷり！";
+    finalArea.innerHTML = `
+      <div class="q-card">
+        <div class="q-flower" style="font-size:26px;">${title}</div>
+        <div class="q-prompt">正解 <b>${finalCorrect} / ${finalQueue.length}</b>（最高連続正解 ${globalBest}）</div>
+        <button class="next-btn" id="finalRestart">もう一度まとめテスト →</button>
+      </div>`;
+    document.getElementById('finalRestart').onclick = startFinal;
+    return;
+  }
+  const q = finalQueue[finalIndex];
+  let diagramHtml = "", promptHtml = "", getChoices, correctVal, unit = "";
+  if(q.kind === 'num'){
+    diagramHtml = diagramSVG(q.f,110).replace('<svg','<svg class="q-diagram"');
+    promptHtml = `<div class="q-flower">${q.f.name}（${q.f.fam}）</div><b>${q.p.label}</b>の数はいくつ？`;
+    correctVal = q.f[q.p.key]; unit = q.p.unit;
+    getChoices = ()=> choiceSet(correctVal).map(v=>({label:v+unit, ok:v===correctVal}));
+  } else if(q.kind === 'pol'){
+    promptHtml = `<div class="q-flower">${q.item.name}</div>虫媒花？ それとも風媒花？`;
+    correctVal = q.item.type;
+    getChoices = ()=> shuffleArr([
+      {label:"🐝 虫媒花", ok: correctVal==="虫媒花"},
+      {label:"🌾 風媒花", ok: correctVal==="風媒花"},
+    ]);
+  } else {
+    diagramHtml = pollenSVG(q.item.shape,110).replace('<svg','<svg class="q-diagram"');
+    promptHtml = `この花粉はどれ？`;
+    correctVal = q.item.name;
+    const names = new Set([correctVal]);
+    const allNames = POLLEN.map(p=>p.name);
+    while(names.size<4 && names.size<allNames.length) names.add(allNames[Math.floor(Math.random()*allNames.length)]);
+    getChoices = ()=> shuffleArr([...names].map(n=>({label:n, ok:n===correctVal})));
+  }
+  finalArea.innerHTML = `
+    <div class="quiz-head"><span>問題 ${finalIndex+1} / ${finalQueue.length}</span><span class="score">正解 ${finalCorrect} <span id="finalStreak" style="color:var(--accent-2);">${globalStreak>=3?`🔥x${globalStreak}`:""}</span></span></div>
+    <div class="q-card">
+      ${diagramHtml}
+      <div class="q-prompt">${promptHtml}</div>
+      <div class="choices" id="finalChoices"></div>
+      <div class="feedback" id="finalFeedback"></div>
+      <button class="next-btn" id="finalNext" hidden>次の問題 →</button>
+    </div>`;
+  const choicesEl = document.getElementById('finalChoices');
+  const fb = document.getElementById('finalFeedback');
+  const nextBtn = document.getElementById('finalNext');
+  getChoices().forEach(({label, ok})=>{
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.addEventListener('click', ()=>{
+      b.classList.add(ok?'correct':'wrong');
+      ok ? playCorrect() : playWrong();
+      const statKey = q.kind==='num' ? `num|${q.f.name}|${q.p.key}` : q.kind==='pol' ? `pol|${q.item.name}` : `poln|${q.item.name}`;
+      recordStat(statKey, ok);
+      noteResult(ok);
+      if(ok){
+        finalCorrect++;
+        fb.textContent = streakNote() || pickVaried(PRAISE, praiseRef); fb.className = "feedback good";
+      } else {
+        fb.textContent = `${pickVaried(CONSOLE_MSG, consoleRef)}… 正解は ${correctVal}${unit}`; fb.className = "feedback bad";
+        [...choicesEl.children].find(x=>x.textContent===correctVal+unit || x.textContent.includes(correctVal))?.classList.add('correct');
+      }
+      [...choicesEl.children].forEach(x=>x.disabled=true);
+      nextBtn.hidden = false;
+    });
+    choicesEl.appendChild(b);
+  });
+  nextBtn.addEventListener('click', ()=>{ finalIndex++; renderFinalQ(); });
+}
+
+function startFinal(){
+  finalQueue = buildFinalQueue();
+  finalIndex = 0; finalCorrect = 0;
+  finalIntro.hidden = true;
+  renderFinalQ();
+}
+startFinalBtn.addEventListener('click', startFinal);
+</script>
+</body>
+</html>
