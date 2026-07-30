@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>花のつくり暗記ゲーム</title>
-<meta name="theme-color" content="#E4572E">
+<meta name="theme-color" content="#5FA8DE">
 <meta name="description" content="花の構造・虫媒花風媒花・花粉の形を覚えるクイズゲーム">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/favicon.png">
@@ -14,50 +14,59 @@
 <meta name="apple-mobile-web-app-title" content="花のつくり">
 <style>
   :root{
-    --bg:#F2F5EE;
-    --bg-grid:#E3EAD7;
+    --bg:#EAF6FD;
+    --bg-grid:#E1F1FC;
+    --gingham-a: rgba(94,169,222,.24);
+    --gingham-b: rgba(94,169,222,.13);
     --card:#FFFFFF;
-    --ink:#1F2E22;
-    --ink-soft:#55655A;
-    --border:#D8E2CB;
-    --accent:#E4572E;     /* 花びら色 */
-    --accent-2:#D9A441;   /* おしべ色 */
-    --sage:#7A9B76;       /* がく色 */
-    --pistil:#3A4F3D;     /* めしべ色 */
-    --good:#3F8A52;
-    --bad:#C4483A;
-    --shadow: 0 1px 2px rgba(31,46,34,.06), 0 6px 16px rgba(31,46,34,.08);
+    --ink:#33495A;
+    --ink-soft:#6F93AA;
+    --border:#CFE7F7;
+    --accent:#5FA8DE;     /* UIのメインカラー(水色) */
+    --accent-2:#FFC94D;   /* おしべ色・ハイライト */
+    --petal:#FF9EC3;      /* 花びら色 */
+    --sage:#82D9AF;       /* がく色 */
+    --pistil:#3D5A80;     /* めしべ色 */
+    --good:#4FBE8C;
+    --bad:#F2897D;
+    --shadow: 0 2px 6px rgba(95,168,222,.12), 0 10px 26px rgba(95,168,222,.18);
   }
   :root[data-theme="dark"]{
-    --bg:#121A14;
-    --bg-grid:#18221A;
-    --card:#1B241C;
-    --ink:#E9F0E3;
-    --ink-soft:#A9B9A0;
-    --border:#2A3A28;
-    --accent:#F0714B;
-    --accent-2:#E8B65B;
-    --sage:#8FB389;
-    --pistil:#DCE7D6;
-    --good:#63B579;
-    --bad:#E4795F;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+    --bg:#15212C;
+    --bg-grid:#1C2C39;
+    --gingham-a: rgba(111,187,239,.16);
+    --gingham-b: rgba(111,187,239,.08);
+    --card:#1E2F3C;
+    --ink:#E8F5FC;
+    --ink-soft:#9BC2DA;
+    --border:#2D4356;
+    --accent:#6FBBEF;
+    --accent-2:#FFD873;
+    --petal:#FFACCF;
+    --sage:#7BD3A5;
+    --pistil:#CDE3F6;
+    --good:#63D19B;
+    --bad:#FF9686;
+    --shadow: 0 2px 6px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.42);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#121A14;
-      --bg-grid:#18221A;
-      --card:#1B241C;
-      --ink:#E9F0E3;
-      --ink-soft:#A9B9A0;
-      --border:#2A3A28;
-      --accent:#F0714B;
-      --accent-2:#E8B65B;
-      --sage:#8FB389;
-      --pistil:#DCE7D6;
-      --good:#63B579;
-      --bad:#E4795F;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+      --bg:#15212C;
+      --bg-grid:#1C2C39;
+      --gingham-a: rgba(111,187,239,.16);
+      --gingham-b: rgba(111,187,239,.08);
+      --card:#1E2F3C;
+      --ink:#E8F5FC;
+      --ink-soft:#9BC2DA;
+      --border:#2D4356;
+      --accent:#6FBBEF;
+      --accent-2:#FFD873;
+      --petal:#FFACCF;
+      --sage:#7BD3A5;
+      --pistil:#CDE3F6;
+      --good:#63D19B;
+      --bad:#FF9686;
+      --shadow: 0 2px 6px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.42);
     }
   }
 
@@ -65,10 +74,13 @@
   body{
     margin:0;
     min-height:100vh;
-    background:
-      linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0/28px 28px,
-      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0/28px 28px,
-      var(--bg);
+    background-color:var(--bg);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 19px, var(--gingham-a) 19px, var(--gingham-a) 38px),
+      repeating-linear-gradient(90deg, transparent, transparent 19px, var(--gingham-a) 19px, var(--gingham-a) 38px),
+      repeating-linear-gradient(0deg, transparent, transparent 9px, var(--gingham-b) 9px, var(--gingham-b) 19px),
+      repeating-linear-gradient(90deg, transparent, transparent 9px, var(--gingham-b) 9px, var(--gingham-b) 19px);
+    background-attachment: fixed;
     color:var(--ink);
     font-family: "BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic Medium","Yu Gothic","Hiragino Sans","Noto Sans JP",sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -83,17 +95,27 @@
     margin-bottom:22px;
   }
   .eyebrow{
+    display:inline-block;
     font-size:12px;
-    letter-spacing:.14em;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    letter-spacing:.1em;
+    color:var(--accent);
+    font-weight:700;
+    background:color-mix(in srgb, var(--accent) 14%, transparent);
+    padding:4px 14px;
+    border-radius:999px;
   }
   h1{
-    margin:6px 0 4px;
+    margin:12px 0 4px;
     font-size:clamp(24px,5vw,32px);
     text-wrap:balance;
     letter-spacing:.02em;
+  }
+  h1::before, h1::after{
+    content:"🎀";
+    font-size:0.55em;
+    margin:0 10px;
+    vertical-align:middle;
+    opacity:.85;
   }
   .sub{
     color:var(--ink-soft);
@@ -112,7 +134,7 @@
     font-size:14px;
     font-weight:700;
     padding:10px 16px;
-    border-radius:10px 10px 0 0;
+    border-radius:16px 16px 0 0;
     border:1px solid var(--border);
     border-bottom:none;
     background:var(--bg-grid);
@@ -132,9 +154,9 @@
   .panel{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:0 12px 12px 12px;
+    border-radius:6px 22px 22px 22px;
     box-shadow:var(--shadow);
-    padding:22px;
+    padding:24px;
   }
   .panel[hidden]{ display:none; }
 
@@ -161,7 +183,7 @@
     position:absolute;
     inset:0;
     backface-visibility:hidden;
-    border-radius:10px;
+    border-radius:18px;
     border:1px solid var(--border);
     display:flex;
     flex-direction:column;
@@ -244,7 +266,7 @@
     font-size:16px;
     font-weight:700;
     padding:14px 6px;
-    border-radius:10px;
+    border-radius:16px;
     border:1px solid var(--border);
     background:var(--bg-grid);
     color:var(--ink);
@@ -270,8 +292,8 @@
     margin:18px auto 0;
     font:inherit;
     font-weight:700;
-    padding:10px 22px;
-    border-radius:10px;
+    padding:11px 24px;
+    border-radius:999px;
     border:none;
     background:var(--accent);
     color:#fff;
@@ -311,7 +333,7 @@
   @media (max-width:520px){ .compare{ grid-template-columns:1fr; } }
   .compare .col{
     border:1px solid var(--border);
-    border-radius:10px;
+    border-radius:18px;
     padding:14px;
     background:var(--bg-grid);
   }
@@ -343,7 +365,7 @@
   }
   .pollen-card{
     border:1px solid var(--border);
-    border-radius:10px;
+    border-radius:18px;
     background:var(--bg-grid);
     padding:12px;
     text-align:center;
@@ -358,7 +380,7 @@
     padding:2px 8px;
     border-radius:999px;
   }
-  .pollen-card .ptype.insect{ background:color-mix(in srgb, var(--accent) 20%, transparent); color:var(--accent); }
+  .pollen-card .ptype.insect{ background:color-mix(in srgb, var(--petal) 22%, transparent); color:var(--petal); }
   .pollen-card .ptype.wind{ background:color-mix(in srgb, var(--sage) 22%, transparent); color:var(--sage); }
   .pollen-card .pdesc{ font-size:12px; color:var(--ink-soft); line-height:1.5; }
 
@@ -373,7 +395,7 @@
     flex:1;
     min-width:110px;
     border:1px solid var(--border);
-    border-radius:10px;
+    border-radius:16px;
     padding:12px;
     text-align:center;
     background:var(--bg-grid);
@@ -430,7 +452,7 @@
     gap:10px;
     padding:9px 12px;
     border:1px solid var(--border);
-    border-radius:8px;
+    border-radius:14px;
     margin-bottom:6px;
     background:var(--bg-grid);
     font-size:13px;
@@ -464,6 +486,7 @@
     .flip-card .inner{ transition:none; }
   }
 </style>
+
 </head>
 <body>
 
@@ -612,11 +635,11 @@ const FLOWERS = [
   { name:"アサガオ",   fam:"ヒルガオ科", sepal:5, petal:5, stamen:5, pistil:1, note:"花びらは合弁（くっついている）" },
   { name:"エンドウ",   fam:"マメ科", sepal:5, petal:5, stamen:10, pistil:1, note:"蝶形の花、おしべ10本(9+1)" },
   { name:"サクラ",     fam:"バラ科", sepal:5, petal:5, stamen:30, pistil:1, note:"おしべは多数(約30本前後)" },
-  { name:"タンポポ",   fam:"キク科", sepal:5, petal:5, stamen:5, pistil:1, note:"1つの小花あたりの数。頭花は小花の集合" },
+  { name:"タンポポ",   fam:"キク科", sepal:8, petal:5, stamen:5, pistil:1, note:"1つの小花あたりの数。頭花は小花の集合", skipQuiz:["sepal"], display:{sepal:"多数（冠毛）"} },
 ];
 const PARTS = [
   { key:"sepal", label:"がく", unit:"枚", color:"var(--sage)" },
-  { key:"petal", label:"花びら", unit:"枚", color:"var(--accent)" },
+  { key:"petal", label:"花びら", unit:"枚", color:"var(--petal)" },
   { key:"stamen", label:"おしべ", unit:"本", color:"var(--accent-2)" },
   { key:"pistil", label:"めしべ", unit:"本", color:"var(--pistil)" },
 ];
@@ -632,7 +655,7 @@ function diagramSVG(f, size){
   const petalCount = Math.min(f.petal, 12);
   for(let i=0;i<petalCount;i++){
     const a = (i/petalCount)*2*Math.PI - Math.PI/2;
-    parts += `<ellipse cx="${c+rPetal*Math.cos(a)}" cy="${c+rPetal*Math.sin(a)}" rx="${size*0.11}" ry="${size*0.16}" transform="rotate(${a*180/Math.PI+90} ${c+rPetal*Math.cos(a)} ${c+rPetal*Math.sin(a)})" fill="var(--accent)" opacity="0.85"/>`;
+    parts += `<ellipse cx="${c+rPetal*Math.cos(a)}" cy="${c+rPetal*Math.sin(a)}" rx="${size*0.11}" ry="${size*0.16}" transform="rotate(${a*180/Math.PI+90} ${c+rPetal*Math.cos(a)} ${c+rPetal*Math.sin(a)})" fill="var(--petal)" opacity="0.85"/>`;
   }
   const stamenCount = Math.min(f.stamen, 20);
   for(let i=0;i<stamenCount;i++){
@@ -653,6 +676,7 @@ function getAudioCtx(){
 function playCorrect(){
   const ctx = getAudioCtx();
   const now = ctx.currentTime;
+  // bright 3-note rising arpeggio, each note layered with a fifth above for body
   [523.25, 659.25, 987.77].forEach((freq, i)=>{
     const t = now + i*0.1;
     [1, 1.5].forEach((mult, j)=>{
@@ -673,6 +697,7 @@ function playCorrect(){
 function playWrong(){
   const ctx = getAudioCtx();
   const now = ctx.currentTime;
+  // two-note "buzzer" descent, layered sawtooth + square for a fuller thud
   [0, 0.16].forEach((offset, i)=>{
     const t = now + offset;
     const startFreq = i===0 ? 220 : 164;
@@ -781,6 +806,7 @@ const CONSOLE_MSG = [
   "今のはメモしておこう","惜しい、もう一歩","気にしない、次！","ここ覚えたら勝ち"
 ];
 let globalStreak = 0, globalBest = 0;
+let lastPraise = "", lastConsole = "";
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function pickVaried(arr, lastRef){
   if(arr.length<=1) return arr[0];
@@ -813,7 +839,7 @@ FLOWERS.forEach(f=>{
         <div class="fam">${f.fam}</div>
       </div>
       <div class="face back">
-        ${PARTS.map(p=>`<div class="row"><span class="label">${p.label}</span><span class="val">${f[p.key]}${p.unit}</span></div>`).join('')}
+        ${PARTS.map(p=>`<div class="row"><span class="label">${p.label}</span><span class="val">${(f.skipQuiz && f.skipQuiz.includes(p.key) && f.display && f.display[p.key]) ? f.display[p.key] : f[p.key]+p.unit}</span></div>`).join('')}
         <div class="pollinate">虫媒花</div>
       </div>
     </div>`;
@@ -861,7 +887,7 @@ let quizQueue = [], qIndex = 0, correctCount = 0, answered = false;
 function buildQuizQueue(){
   const pool = FLOWERS.filter(f=>scopeSet.has(f.name));
   let items = [];
-  pool.forEach(f=> PARTS.forEach(p=> items.push({f,p})));
+  pool.forEach(f=> PARTS.forEach(p=> { if(!(f.skipQuiz && f.skipQuiz.includes(p.key))) items.push({f,p}); }));
   if(weakOnlyNum){
     items = items.filter(({f,p})=> isWeak(`num|${f.name}|${p.key}`));
   }
@@ -917,6 +943,8 @@ function renderQuestion(){
   qFlowerName.textContent = f.name + `（${f.fam}）`;
   qPrompt.innerHTML = `<b>${p.label}</b>の数はいくつ？`;
   qDiagram.outerHTML = diagramSVG(f,110).replace('<svg','<svg id="qDiagram" class="q-diagram"');
+  Object.assign(window, {}); // no-op keep ref fresh
+  const freshDiagram = document.getElementById('qDiagram');
   qFeedback.textContent = "";
   qFeedback.className = "feedback";
   qNext.hidden = true;
@@ -1044,7 +1072,7 @@ const POLLEN = [
 
 function pollenSVG(shape, size){
   const c = size/2;
-  const insectColor = "var(--accent)";
+  const insectColor = "var(--petal)";
   const windColor = "var(--sage)";
   let body = "";
   switch(shape){
@@ -1274,7 +1302,7 @@ let finalQueue = [], finalIndex = 0, finalCorrect = 0;
 
 function buildFinalQueue(){
   const items = [];
-  FLOWERS.forEach(f=> PARTS.forEach(p=> items.push({kind:'num', f, p})));
+  FLOWERS.forEach(f=> PARTS.forEach(p=> { if(!(f.skipQuiz && f.skipQuiz.includes(p.key))) items.push({kind:'num', f, p}); }));
   pollinateExamples.forEach(it=> items.push({kind:'pol', item:it}));
   POLLEN.forEach(it=> items.push({kind:'poln', item:it}));
   shuffleArr(items);
