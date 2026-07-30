@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>花のつくり暗記ゲーム</title>
+<meta name="theme-color" content="#E4572E">
+<meta name="description" content="花の構造・虫媒花風媒花・花粉の形を覚えるクイズゲーム">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="花のつくり">
 <style>
   :root{
     --bg:#F2F5EE;
@@ -1353,6 +1361,12 @@ function startFinal(){
   renderFinalQ();
 }
 startFinalBtn.addEventListener('click', startFinal);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
