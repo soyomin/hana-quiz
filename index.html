@@ -569,8 +569,7 @@
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="cards">① おぼえる</button>
-    <button role="tab" aria-selected="false" data-tab="why">🕵️ なぜその数？</button>
+    <button role="tab" aria-selected="true" data-tab="why">🕵️ なぜその数？</button>
     <button role="tab" aria-selected="false" data-tab="whyQuiz">🔍 単子葉クイズ</button>
     <button role="tab" aria-selected="false" data-tab="quiz">② 数字テスト</button>
     <button role="tab" aria-selected="false" data-tab="pollinate">③ 虫媒花・風媒花</button>
@@ -581,11 +580,7 @@
     <button role="tab" aria-selected="false" data-tab="progress">📊 達成度</button>
   </nav>
 
-  <section class="panel" id="panel-cards" role="tabpanel">
-    <div class="grid" id="cardGrid"></div>
-  </section>
-
-  <section class="panel" id="panel-why" role="tabpanel" hidden>
+  <section class="panel" id="panel-why" role="tabpanel">
     <div class="toggle" id="storyToggle">
       <button data-story="abrana" aria-pressed="true">🌱 アブラナ</button>
       <button data-story="tulip" aria-pressed="false">🌷 チューリップ</button>
@@ -594,6 +589,10 @@
       <button data-story="sakura" aria-pressed="false">🌸 サクラ</button>
       <button data-story="endou" aria-pressed="false">🌿 エンドウ</button>
       <button data-story="asagao" aria-pressed="false">🌅 アサガオ</button>
+      <button data-story="matsu" aria-pressed="false">🌲 マツ</button>
+      <button data-story="sugi" aria-pressed="false">🌳 スギ</button>
+      <button data-story="kabocha" aria-pressed="false">🎃 カボチャ</button>
+      <button data-story="hechima" aria-pressed="false">🥒 ヘチマ</button>
     </div>
 
     <div class="story" id="story-abrana">
@@ -673,6 +672,46 @@
       <p>ある実験で、つぼみのうちに袋をかぶせて虫が来られないようにしても、アサガオはちゃんと種をつくりました。「ほら、証拠でしょ？ぼくたちは虫さん頼みじゃなくても、自分の力で子孫を残せるんだ」</p>
       <p>そうしてアサガオは、朝の短い間に精一杯咲き、静かにしぼみながらも、次の種をしっかり残していくのでした。</p>
       <p class="story-end">――たった半日の命でも、ちゃんと「約束」は果たされている。それがアサガオの生き方なのです。</p>
+    </div>
+
+    <div class="story" id="story-matsu" hidden>
+      <h3 class="story-title">🌲 マツの空飛ぶ挑戦</h3>
+      <p>高い松の木の枝先に、小さな松ぼっくりのような「め花」と、もっと小さな「お花」がついていました。「ぼくたちには、花びらもがくもないんだ。地味に思われるかもしれないけど、これにはちゃんと理由があるんだよ」</p>
+      <p>お花をよく見ると、中からたくさんの花粉が飛び出していきます。1つ1つの花粉には、丸い本体の両側に、ぷっくりとふくらんだ「空気袋」が2つついていました。「これはぼくたちだけの秘密兵器。空気袋のおかげで、まるでミッキーマウスの耳みたいな形になって、風にふわっと乗って遠くまで飛んでいけるんだ」</p>
+      <p>め花のほうを見ると、うろこのような「りん片」がたくさん重なっていて、その内側に「胚珠」という種のもとがむき出しのままついていました。「ふつうの花なら、胚珠は子房という部屋に守られているんだけど、ぼくたちマツには子房がないんだ。だから『裸子植物』って呼ばれているんだよ」</p>
+      <p>風が吹くたびに、お花から飛び立った花粉たちは、空気袋を使って何キロも旅をします。そして運よくめ花の胚珠にたどり着けた花粉だけが、受粉に成功するのでした。</p>
+      <p>「虫さんに頼らない代わりに、ものすごい数の花粉を作って、風にまかせて送り出しているんだ。届く確率は低いけど、数で勝負！」</p>
+      <p class="story-end">――こうしてマツは、花びらもがくも持たない代わりに、風と空気袋という道具を使いこなし、何年もかけて大きな松ぼっくりへと育てていくのでした。</p>
+    </div>
+
+    <div class="story" id="story-sugi" hidden>
+      <h3 class="story-title">🌳 スギの一つ星のしるし</h3>
+      <p>春になると、スギの木にはたくさんの小さな花が咲きます。でもマツと同じように、花びらもがくもありません。「ぼくたちも裸子植物、風にすべてをまかせる仲間なんだ」</p>
+      <p>スギの花粉をのぞくと、ほとんど丸い球形をしていましたが、よく見ると表面に小さな突起(とっき)が1つだけ、ちょこんとついていました。「これがぼくたちのしるし。マツみたいな空気袋は無いけど、その分うんと軽く、小さく作っているんだ。だから風に乗りやすいんだよ」</p>
+      <p>スギは仲間のマツよりもさらに多くの花粉を作ることで知られていました。「軽くて小さい花粉を、とにかくたくさん飛ばす。それがぼくたちの作戦なんだ」</p>
+      <p>春先、スギ花粉が大量に飛ぶことで、くしゃみや鼻水に悩む人も多いと聞きます。「ごめんね、そのつもりじゃないんだけど、ぼくたちも子孫を残すのに必死なんだ」</p>
+      <p>風に運ばれた花粉が、遠くのスギのめ花にたどり着くと、そこでようやく受粉が完了します。</p>
+      <p class="story-end">――目立つ花びらも、甘い蜜も持たないスギは、ただひたすら「軽さ」と「数」で勝負する、風媒花のスペシャリストなのでした。</p>
+    </div>
+
+    <div class="story" id="story-kabocha" hidden>
+      <h3 class="story-title">🎃 カボチャ、お花とめ花の共同作業</h3>
+      <p>夏の畑に、カボチャの黄色い花が咲きます。でも同じ株に、実は2種類の花が咲いていることに気づいている人は少ないかもしれません。「お花」と「め花」です。</p>
+      <p>お花には、合着したおしべがまとまってついていました。花びらは5枚がくっついた合弁花、がくも5枚。「ぼくお花は、花粉を配る係。虫さんに花粉をたくさん持って行ってもらうのが仕事なんだ」</p>
+      <p>め花をよく見ると、花の根もとに、すでに小さなカボチャの赤ちゃんのような、ふくらんだ部分がついていました。「これが子房。虫さんが花粉を運んできてくれさえすれば、ぼくがこのままカボチャの実に育っていくんだよ」</p>
+      <p>虫たちはお花からめ花へと飛び回り、とげとげした花粉を体につけて運びます。「ぼくたちの花粉は、表面がびっしりトゲトゲしているんだ。虫の体の毛にしっかりからまるようにね」</p>
+      <p>め花が無事に受粉すると、根もとの子房がぐんぐん大きくなっていき、やがて丸々としたカボチャの実になります。一方でお花のほうは、役目を終えるとしぼんで落ちてしまいました。</p>
+      <p class="story-end">――同じ株に咲く2つの花が、それぞれの役目を果たすことで、あの大きなカボチャが実っていたのです。</p>
+    </div>
+
+    <div class="story" id="story-hechima" hidden>
+      <h3 class="story-title">🥒 ヘチマの兄弟、お花とめ花</h3>
+      <p>つるを伸ばして育つヘチマにも、カボチャと同じように「お花」と「め花」がありました。同じ株から生まれた、いわば兄弟のような関係です。</p>
+      <p>お花はたくさん咲きますが、花びらは1枚ずつ離れた離弁花で、真ん中にはおしべが集まっていました。「ぼくたちの仕事は花粉を作って、虫さんに運んでもらうこと。実にはならないんだ」</p>
+      <p>め花は少し違いました。花の根もとに、すでに細長い緑色のふくらみ、子房がついていたのです。「これが将来、あの長いヘチマの実になる部分だよ。虫さんが花粉を届けてくれたら、ぼくはこのまま大きく育っていくんだ」</p>
+      <p>虫がお花からめ花へと飛び移り、受粉が行われると、め花の根もとの子房はぐんぐん育ち始めます。日に日に長く伸びて、やがて見慣れた、あの緑色の長いヘチマの実になりました。</p>
+      <p>お花のほうは、実になることなく、静かに役目を終えてしぼんでいきます。「実になれなくても、ぼくがいたから、めしべの兄弟がちゃんと実を結べたんだ」</p>
+      <p class="story-end">――お花とめ花、2つの役割が力を合わせることで、1本のヘチマが育っていく。それが、ウリ科の植物に共通する仕組みなのです。</p>
     </div>
 
     <div class="rule-box">
@@ -963,7 +1002,6 @@ function playFanfare(pct){
 /* ---------- Tabs ---------- */
 const tabs = document.querySelectorAll('nav.tabs button');
 const panels = {
-  cards:document.getElementById('panel-cards'),
   why:document.getElementById('panel-why'),
   whyQuiz:document.getElementById('panel-whyQuiz'),
   quiz:document.getElementById('panel-quiz'),
@@ -1036,28 +1074,6 @@ function noteResult(isCorrect){
   if(isCorrect){ globalStreak++; if(globalStreak>globalBest) globalBest=globalStreak; }
   else globalStreak = 0;
 }
-
-/* ---------- Flashcards ---------- */
-const cardGrid = document.getElementById('cardGrid');
-FLOWERS.forEach(f=>{
-  const card = document.createElement('div');
-  card.className = 'flip-card';
-  card.innerHTML = `
-    <div class="inner">
-      <div class="face front">
-        <svg class="diagram" viewBox="0 0 64 64"></svg>
-        <div class="name">${f.name}</div>
-        <div class="fam">${f.fam}</div>
-      </div>
-      <div class="face back">
-        ${PARTS.map(p=>`<div class="row"><span class="label">${p.label}</span><span class="val">${(f.skipQuiz && f.skipQuiz.includes(p.key) && f.display && f.display[p.key]) ? f.display[p.key] : f[p.key]+p.unit}</span></div>`).join('')}
-        <div class="pollinate">虫媒花</div>
-      </div>
-    </div>`;
-  card.querySelector('.face.front svg').outerHTML = diagramSVG(f,64).replace('<svg', '<svg class="diagram"');
-  card.addEventListener('click', ()=>{ playTap(); card.classList.toggle('flipped'); });
-  cardGrid.appendChild(card);
-});
 
 /* ---------- Quiz ---------- */
 const qDiagram = document.getElementById('qDiagram');
