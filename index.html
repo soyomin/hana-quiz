@@ -1064,12 +1064,14 @@ weakOnlyPolBtn.addEventListener('click', ()=>{ pOrder=[]; area.innerHTML=""; });
 
 /* ---------- pollen shapes ---------- */
 const POLLEN = [
-  { name:"マツ",   type:"風媒花", shape:"two-sacs", desc:"丸い本体の両側に空気袋(気嚢)が2つ。軽くて風でよく飛ぶ" },
-  { name:"スギ",   type:"風媒花", shape:"one-bump", desc:"ほぼ球形で、表面に小さな突起が1つだけ" },
-  { name:"トウモロコシ", type:"風媒花", shape:"smooth", desc:"小さくなめらかな球形。表面に模様がほとんどなく、軽くて数が多い" },
-  { name:"アブラナ", type:"虫媒花", shape:"net-oval", desc:"俵形（だ円形）で、表面に網目もようがある" },
-  { name:"アサガオ", type:"虫媒花", shape:"spiky",   desc:"球形で、表面全体にとげ状の突起がある" },
-  { name:"ヘチマ・カボチャ", type:"虫媒花", shape:"spiky-big", desc:"大きめの球形で、とげが多くネバネバする" },
+  { name:"ヒマワリ", type:"虫媒花", shape:"spiky-long",  desc:"球形で、太く長いとげが規則的に並んでいる" },
+  { name:"カボチャ", type:"虫媒花", shape:"spiky-dense", desc:"球形で、細かいとげが表面全体にびっしり生えている" },
+  { name:"アブラナ", type:"虫媒花", shape:"ridged-oval", desc:"俵形（だ円形）で、表面に細かいすじ模様がある" },
+  { name:"ユリ",     type:"虫媒花", shape:"ridged-oval-long", desc:"細長いだ円形で、表面に細かいすじ模様がある" },
+  { name:"ツツジ",   type:"虫媒花", shape:"tetrad",      desc:"4つの花粉が粘着糸でつながって1つのかたまりになっている" },
+  { name:"トウモロコシ", type:"風媒花", shape:"smooth",   desc:"なめらかな球形で、模様がほとんどない" },
+  { name:"マツ",     type:"風媒花", shape:"two-sacs",    desc:"丸い本体の両側に空気袋(気嚢)が2つついている" },
+  { name:"スギ",     type:"風媒花", shape:"one-bump",    desc:"球形で、表面に小さな突起が1つだけある" },
 ];
 
 function pollenSVG(shape, size){
@@ -1093,32 +1095,71 @@ function pollenSVG(shape, size){
         <ellipse cx="${c+size*0.30}" cy="${c}" rx="${size*0.17}" ry="${size*0.13}" fill="${windColor}" opacity="0.45"/>`;
       break;
     }
-    case "net-oval": {
-      const rx=size*0.32, ry=size*0.22;
-      let net = "";
-      for(let i=-2;i<=2;i++){
-        net += `<line x1="${c-rx}" y1="${c+i*ry*0.35}" x2="${c+rx}" y2="${c+i*ry*0.35}" stroke="${insectColor}" stroke-width="${size*0.012}" opacity="0.6"/>`;
+    case "ridged-oval":
+    case "ridged-oval-long": {
+      const rx = shape === "ridged-oval-long" ? size*0.36 : size*0.30;
+      const ry = shape === "ridged-oval-long" ? size*0.18 : size*0.22;
+      let ridges = "";
+      const n = 7;
+      for(let i=-Math.floor(n/2); i<=Math.floor(n/2); i++){
+        const off = i*(rx*1.7/n);
+        ridges += `<line x1="${c+off-ry*0.3}" y1="${c-ry*1.4}" x2="${c+off+ry*0.3}" y2="${c+ry*1.4}" stroke="${insectColor}" stroke-width="${size*0.014}" opacity="0.55"/>`;
       }
-      for(let i=-2;i<=2;i++){
-        net += `<line x1="${c+i*rx*0.35}" y1="${c-ry}" x2="${c+i*rx*0.35}" y2="${c+ry}" stroke="${insectColor}" stroke-width="${size*0.012}" opacity="0.6"/>`;
-      }
-      body = `<ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}" fill="${insectColor}" opacity="0.25"/>
+      body = `<ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}" fill="${insectColor}" opacity="0.3"/>
         <ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}" fill="none" stroke="${insectColor}" stroke-width="${size*0.02}"/>
         <clipPath id="clip-${shape}-${size}"><ellipse cx="${c}" cy="${c}" rx="${rx}" ry="${ry}"/></clipPath>
-        <g clip-path="url(#clip-${shape}-${size})">${net}</g>`;
+        <g clip-path="url(#clip-${shape}-${size})">${ridges}</g>`;
       break;
     }
-    case "spiky":
-    case "spiky-big": {
-      const r = shape === "spiky-big" ? size*0.30 : size*0.26;
-      const spikeLen = shape === "spiky-big" ? size*0.11 : size*0.08;
-      const n = 16;
+    case "spiky-long": {
+      const r = size*0.26;
+      const spikeLen = size*0.11;
+      const n = 14;
       let spikes = "";
       for(let i=0;i<n;i++){
         const a = (i/n)*2*Math.PI;
-        spikes += `<line x1="${c+r*Math.cos(a)}" y1="${c+r*Math.sin(a)}" x2="${c+(r+spikeLen)*Math.cos(a)}" y2="${c+(r+spikeLen)*Math.sin(a)}" stroke="${insectColor}" stroke-width="${size*0.022}" stroke-linecap="round"/>`;
+        spikes += `<line x1="${c+r*Math.cos(a)}" y1="${c+r*Math.sin(a)}" x2="${c+(r+spikeLen)*Math.cos(a)}" y2="${c+(r+spikeLen)*Math.sin(a)}" stroke="${insectColor}" stroke-width="${size*0.025}" stroke-linecap="round"/>`;
       }
       body = `<circle cx="${c}" cy="${c}" r="${r}" fill="${insectColor}" opacity="0.85"/>${spikes}`;
+      break;
+    }
+    case "spiky-dense": {
+      const r = size*0.28;
+      const spikeLen = size*0.045;
+      const n = 32;
+      let spikes = "";
+      for(let i=0;i<n;i++){
+        const a = (i/n)*2*Math.PI;
+        spikes += `<line x1="${c+r*Math.cos(a)}" y1="${c+r*Math.sin(a)}" x2="${c+(r+spikeLen)*Math.cos(a)}" y2="${c+(r+spikeLen)*Math.sin(a)}" stroke="${insectColor}" stroke-width="${size*0.016}" stroke-linecap="round"/>`;
+      }
+      let dots = "";
+      for(let i=0;i<18;i++){
+        const a = (i/18)*2*Math.PI + 0.3;
+        const rr = r*0.6;
+        dots += `<circle cx="${c+rr*Math.cos(a)}" cy="${c+rr*Math.sin(a)}" r="${size*0.012}" fill="${insectColor}" opacity="0.7"/>`;
+      }
+      body = `<circle cx="${c}" cy="${c}" r="${r}" fill="${insectColor}" opacity="0.85"/>${spikes}${dots}`;
+      break;
+    }
+    case "tetrad": {
+      const rr = size*0.19;
+      const d = size*0.16;
+      const centers = [
+        [c, c-d*0.6],
+        [c-d*0.85, c+d*0.45],
+        [c+d*0.85, c+d*0.45],
+      ];
+      let lobes = "";
+      centers.forEach(([x,y])=>{
+        lobes += `<circle cx="${x}" cy="${y}" r="${rr}" fill="${insectColor}" opacity="0.8" stroke="${insectColor}" stroke-width="${size*0.012}"/>`;
+      });
+      let threads = "";
+      for(let i=0;i<3;i++){
+        const baseX = c - d*0.5 + i*d*0.5;
+        const baseY = c + d*1.1;
+        threads += `<path d="M${baseX},${baseY} q ${size*0.05},${size*0.08} ${size*0.02},${size*0.15} t ${size*0.04},${size*0.12}" fill="none" stroke="${insectColor}" stroke-width="${size*0.01}" opacity="0.6"/>`;
+      }
+      body = lobes + threads;
       break;
     }
   }
