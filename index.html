@@ -488,6 +488,74 @@
   @media (prefers-reduced-motion: reduce){
     .flip-card .inner{ transition:none; }
   }
+
+  /* --- story / why --- */
+  .story{
+    max-width:34em;
+    margin:0 auto 26px;
+  }
+  .story-title{
+    font-size:17px;
+    margin:0 0 12px;
+    text-align:center;
+  }
+  .story p{
+    font-size:14.5px;
+    line-height:1.9;
+    margin:0 0 14px;
+  }
+  .story-end{
+    font-style:italic;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+  .rule-box{
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:var(--bg-grid);
+    padding:18px;
+    margin-bottom:20px;
+  }
+  .rule-box h3{
+    margin:0 0 8px;
+    font-size:15px;
+  }
+  .rule-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:12px;
+  }
+  @media (max-width:520px){ .rule-grid{ grid-template-columns:1fr; } }
+  .rule-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:12px;
+  }
+  .rule-head{
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:6px;
+  }
+  .rule-body{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .reason-list h3{
+    margin:0 0 10px;
+    font-size:15px;
+  }
+  .reason-item{
+    font-size:13px;
+    line-height:1.7;
+    padding:10px 14px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:var(--bg-grid);
+    margin-bottom:8px;
+  }
 </style>
 
 </head>
@@ -502,6 +570,8 @@
 
   <nav class="tabs" role="tablist">
     <button role="tab" aria-selected="true" data-tab="cards">① おぼえる</button>
+    <button role="tab" aria-selected="false" data-tab="why">🕵️ なぜその数？</button>
+    <button role="tab" aria-selected="false" data-tab="whyQuiz">🔍 単子葉クイズ</button>
     <button role="tab" aria-selected="false" data-tab="quiz">② 数字テスト</button>
     <button role="tab" aria-selected="false" data-tab="pollinate">③ 虫媒花・風媒花</button>
     <button role="tab" aria-selected="false" data-tab="pollinateQuiz">④ 虫媒花クイズ</button>
@@ -513,6 +583,62 @@
 
   <section class="panel" id="panel-cards" role="tabpanel">
     <div class="grid" id="cardGrid"></div>
+  </section>
+
+  <section class="panel" id="panel-why" role="tabpanel" hidden>
+    <div class="story">
+      <h3 class="story-title">🌱 アブラナの旅 ―花びらから種まで―</h3>
+      <p>昔々、菜の花畑の一角に、4枚の花びらを持つ小さなアブラナの花が咲きました。花びらは十字架のような形に並んでいて、まるで「ここにいるよ！」と空に向かって手をふっているようでした。</p>
+      <p>花の真ん中には、6本のおしべが立っていました。よく見ると、4本は背が高く、2本だけ少し背が低いのです。「なんでみんな同じ背の高さじゃないの？」と聞かれると、おしべたちは答えました。「ぼくたち4人は遠くまで手をのばして、虫さんの体にしっかり花粉をつけるためにこんなに背が高いんだ。残りの2人は近くで見張り役をしているんだよ。」</p>
+      <p>ある朝、モンシロチョウがひらひらと飛んできました。蜜を吸おうと花にとまると、背の高い4本のおしべから、小さな花粉のつぶたちがチョウの体にペタッとくっつきました。花粉たちは「よし、いよいよ旅の始まりだ！」と胸をはずませました。</p>
+      <p>チョウは次の菜の花へ、また次の菜の花へと飛びまわります。花粉たちはチョウの体にしがみつきながら、風を感じ、太陽をあびながら旅を続けました。そしてついに、隣のアブラナの花にたどり着いたのです。</p>
+      <p>そこにいたのは、めしべでした。めしべの先には「柱頭」という受け皿のような場所があり、花粉たちはそこにそっと降り立ちました。「やっと着いた」と花粉が言うと、柱頭は「よく来たね」とやさしく迎え入れました。</p>
+      <p>花粉は、めしべの中にある細い道「花柱」を通って、奥にある「子房」という部屋を目指しました。子房の中には、たくさんの「胚珠」という小さな赤ちゃんの種が、じっと出番を待っていました。花粉が胚珠にたどり着くと、2つは結ばれます。これが「受粉」と呼ばれる大切な出会いです。</p>
+      <p>受粉が終わると、胚珠は少しずつ「種子」へと姿を変えていきました。それと同時に、子房もぷっくりとふくらみ始め、やがて細長い「果実（さや）」になりました。さやの中では、たくさんの種子たちが、ぎゅっと並んで守られながら育っていきます。</p>
+      <p>季節が過ぎ、さやが茶色くかわいてくると、パチンとはじけて、中から新しい種子たちが地面に落ちていきます。「さあ、次はぼくたちの番だ！」種子たちはそう言って、次の春、また4枚の花びらを持つアブラナとして芽を出す日を待つのでした。</p>
+      <p class="story-end">――こうして、1つの花から始まった小さな旅は、次の世代の命へとつながっていくのです。</p>
+    </div>
+
+    <div class="rule-box">
+      <h3>🔑 秘密の合言葉：花びらの数でなかまがわかる</h3>
+      <p>アブラナの花びらは4枚でした。実はこれ、丸暗記する数字じゃなくて「なかま分けの合言葉」なんです。</p>
+      <div class="rule-grid">
+        <div class="rule-card">
+          <div class="rule-head">🌾 単子葉類 → 3の合言葉</div>
+          <div class="rule-body">芽が出るとき、最初の葉（子葉）が1枚だけのなかま。花びら・がくが3枚、おしべが6本（3×2）になりやすい。<br><b>例：チューリップ・ハナショウブ</b></div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-head">🌿 双子葉類 → 4か5の合言葉</div>
+          <div class="rule-body">芽が出るとき、最初の葉が2枚のなかま。ほとんどが5だけど、アブラナ科だけは特別に4を使う。<br><b>例：アブラナ(4) / ジャガイモ・アサガオ・エンドウ・サクラ・タンポポ(5)</b></div>
+        </div>
+      </div>
+      <p style="margin-top:14px;">つまり「花びらを数える→単子葉か双子葉かがわかる」という順番で考えると、数字はただの暗記じゃなくなります。</p>
+    </div>
+
+    <div class="reason-list">
+      <h3>🔍 それでも残る「変わった数字」の理由</h3>
+      <div class="reason-item"><b>エンドウのおしべ10本</b>：9本がぴったりくっついて、1本だけ離れている（9+1）。蝶の羽のような花びらに合わせた、マメ科特有のつくり。</div>
+      <div class="reason-item"><b>タンポポのがくが「多数」</b>：がくが綿毛（冠毛）に姿を変えていて、種を風に乗せて飛ばす道具になっている。数える意味がなくなるほど特別に進化した。</div>
+      <div class="reason-item"><b>サクラのおしべが「多数」</b>：たくさんの虫を呼ぶために、数を決めずに増やし続けている。</div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-whyQuiz" role="tabpanel" hidden>
+    <div class="toggle" style="margin-bottom:8px;">
+      <button id="weakOnlySectBtn" aria-pressed="false">🔁 苦手だけ出題</button>
+    </div>
+    <div class="quiz-head">
+      <span>問題 <span id="sectNum">1</span> / <span id="sectTotal">–</span></span>
+      <span class="score">正解 <span id="sectScore">0</span></span>
+    </div>
+    <div class="q-card">
+      <svg class="q-diagram" id="sectDiagram"></svg>
+      <div class="q-flower" id="sectFlowerName"></div>
+      <div class="q-prompt">この花は<b>単子葉類</b>？ それとも<b>双子葉類</b>？</div>
+      <div class="choices" id="sectChoices" style="grid-template-columns:1fr 1fr;"></div>
+      <div class="feedback" id="sectFeedback"></div>
+      <button class="next-btn" id="sectNext" hidden>次の問題 →</button>
+    </div>
   </section>
 
   <section class="panel" id="panel-quiz" role="tabpanel" hidden>
@@ -612,6 +738,10 @@
       <div id="weakList"></div>
     </div>
     <div class="prog-section">
+      <h3>単子葉・双子葉クイズの達成度</h3>
+      <div id="sectProgress"></div>
+    </div>
+    <div class="prog-section">
       <h3>数字テストの達成度</h3>
       <div id="numProgress"></div>
     </div>
@@ -631,14 +761,14 @@
 
 <script>
 const FLOWERS = [
-  { name:"ジャガイモ", fam:"ナス科", sepal:5, petal:5, stamen:5, pistil:1, note:"星形に開く花びら" },
-  { name:"アブラナ",   fam:"アブラナ科", sepal:4, petal:4, stamen:6, pistil:1, note:"おしべ6本(長4短2)" },
-  { name:"チューリップ", fam:"ユリ科", sepal:3, petal:3, stamen:6, pistil:1, note:"がくも花びらのように見える" },
-  { name:"ハナショウブ", fam:"アヤメ科", sepal:3, petal:3, stamen:3, pistil:1, note:"めしべの柱頭が3裂" },
-  { name:"アサガオ",   fam:"ヒルガオ科", sepal:5, petal:5, stamen:5, pistil:1, note:"花びらは合弁（くっついている）" },
-  { name:"エンドウ",   fam:"マメ科", sepal:5, petal:5, stamen:10, pistil:1, note:"蝶形の花、おしべ10本(9+1)" },
-  { name:"サクラ",     fam:"バラ科", sepal:5, petal:5, stamen:30, pistil:1, note:"おしべは多数(約30本前後)" },
-  { name:"タンポポ",   fam:"キク科", sepal:8, petal:5, stamen:5, pistil:1, note:"1つの小花あたりの数。頭花は小花の集合", skipQuiz:["sepal"], display:{sepal:"多数（冠毛）"} },
+  { name:"ジャガイモ", fam:"ナス科", sect:"双子葉類", sepal:5, petal:5, stamen:5, pistil:1, note:"星形に開く花びら" },
+  { name:"アブラナ",   fam:"アブラナ科", sect:"双子葉類", sepal:4, petal:4, stamen:6, pistil:1, note:"おしべ6本(長4短2)" },
+  { name:"チューリップ", fam:"ユリ科", sect:"単子葉類", sepal:3, petal:3, stamen:6, pistil:1, note:"がくも花びらのように見える" },
+  { name:"ハナショウブ", fam:"アヤメ科", sect:"単子葉類", sepal:3, petal:3, stamen:3, pistil:1, note:"めしべの柱頭が3裂" },
+  { name:"アサガオ",   fam:"ヒルガオ科", sect:"双子葉類", sepal:5, petal:5, stamen:5, pistil:1, note:"花びらは合弁（くっついている）" },
+  { name:"エンドウ",   fam:"マメ科", sect:"双子葉類", sepal:5, petal:5, stamen:10, pistil:1, note:"蝶形の花、おしべ10本(9+1)" },
+  { name:"サクラ",     fam:"バラ科", sect:"双子葉類", sepal:5, petal:5, stamen:30, pistil:1, note:"おしべは多数(約30本前後)" },
+  { name:"タンポポ",   fam:"キク科", sect:"双子葉類", sepal:8, petal:5, stamen:5, pistil:1, note:"1つの小花あたりの数。頭花は小花の集合", skipQuiz:["sepal"], display:{sepal:"多数（冠毛）"} },
 ];
 const PARTS = [
   { key:"sepal", label:"がく", unit:"枚", color:"var(--sage)" },
@@ -758,6 +888,8 @@ function playFanfare(pct){
 const tabs = document.querySelectorAll('nav.tabs button');
 const panels = {
   cards:document.getElementById('panel-cards'),
+  why:document.getElementById('panel-why'),
+  whyQuiz:document.getElementById('panel-whyQuiz'),
   quiz:document.getElementById('panel-quiz'),
   pollinate:document.getElementById('panel-pollinate'),
   pollinateQuiz:document.getElementById('panel-pollinateQuiz'),
@@ -984,6 +1116,103 @@ function renderQuestion(){
 }
 
 resetQuiz();
+
+/* ---------- 単子葉・双子葉 quiz ---------- */
+const sectDiagram = document.getElementById('sectDiagram');
+const sectFlowerName = document.getElementById('sectFlowerName');
+const sectChoices = document.getElementById('sectChoices');
+const sectFeedback = document.getElementById('sectFeedback');
+const sectNext = document.getElementById('sectNext');
+const sectNum = document.getElementById('sectNum');
+const sectTotal = document.getElementById('sectTotal');
+const sectScore = document.getElementById('sectScore');
+const weakOnlySectBtn = document.getElementById('weakOnlySectBtn');
+
+let weakOnlySect = false;
+weakOnlySectBtn.addEventListener('click', ()=>{
+  weakOnlySect = !weakOnlySect;
+  weakOnlySectBtn.setAttribute('aria-pressed', weakOnlySect ? 'true':'false');
+  resetSectQuiz();
+});
+
+let sectQueue = [], sectIndex = 0, sectCorrect = 0, sectAnswered = false;
+
+function buildSectQueue(){
+  let items = [...FLOWERS];
+  if(weakOnlySect){
+    items = items.filter(f=> isWeak(`sect|${f.name}`));
+  }
+  return shuffleArr(items);
+}
+
+function resetSectQuiz(){
+  sectQueue = buildSectQueue();
+  sectIndex = 0; sectCorrect = 0;
+  sectTotal.textContent = sectQueue.length;
+  sectScore.textContent = "0";
+  renderSectQuestion();
+}
+
+function renderSectQuestion(){
+  if(weakOnlySect && sectQueue.length === 0){
+    sectFlowerName.textContent = "";
+    sectDiagram.innerHTML = "";
+    sectChoices.innerHTML = "";
+    sectFeedback.textContent = "🎉 苦手な項目はありません！";
+    sectNext.hidden = true;
+    return;
+  }
+  if(sectIndex >= sectQueue.length){
+    playFanfare(sectQueue.length ? sectCorrect/sectQueue.length : 0);
+    sectFlowerName.textContent = "";
+    sectDiagram.innerHTML = "";
+    const pct = sectQueue.length ? sectCorrect/sectQueue.length : 0;
+    const tierMsg = pct===1 ? "🏆 満点！合言葉マスター！" : pct>=0.8 ? "🎉 すごい！" : "🌱 苦手だけ出題で復習しよう";
+    sectFeedback.innerHTML = "";
+    sectChoices.innerHTML = `<div style="grid-column:1/-1; text-align:center; font-weight:700;">全問終了！ 正解 ${sectCorrect} / ${sectQueue.length}<br>${tierMsg}</div>`;
+    sectNext.hidden = false;
+    sectNext.textContent = "もう一度 →";
+    sectNext.onclick = resetSectQuiz;
+    return;
+  }
+  sectAnswered = false;
+  const f = sectQueue[sectIndex];
+  sectNum.textContent = sectIndex+1;
+  sectFlowerName.textContent = f.name + `（${f.fam}）`;
+  sectDiagram.outerHTML = diagramSVG(f,110).replace('<svg','<svg id="sectDiagram" class="q-diagram"');
+  sectFeedback.textContent = "";
+  sectFeedback.className = "feedback";
+  sectNext.hidden = true;
+
+  sectChoices.innerHTML = "";
+  shuffleArr(["単子葉類","双子葉類"]).forEach(label=>{
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.addEventListener('click', ()=>{
+      if(sectAnswered) return;
+      sectAnswered = true;
+      const isCorrect = label === f.sect;
+      b.classList.add(isCorrect ? 'correct':'wrong');
+      isCorrect ? playCorrect() : playWrong();
+      recordStat(`sect|${f.name}`, isCorrect);
+      noteResult(isCorrect);
+      if(isCorrect){
+        sectCorrect++; sectScore.textContent = sectCorrect;
+        sectFeedback.textContent = streakNote() || pickVaried(PRAISE, praiseRef); sectFeedback.className = "feedback good";
+      } else {
+        sectFeedback.textContent = `${pickVaried(CONSOLE_MSG, consoleRef)}… 正解は${f.sect}`; sectFeedback.className = "feedback bad";
+        [...sectChoices.children].find(c=>c.textContent===f.sect)?.classList.add('correct');
+      }
+      [...sectChoices.children].forEach(c=>c.disabled=true);
+      sectNext.hidden = false;
+    });
+    sectChoices.appendChild(b);
+  });
+  sectNext.textContent = "次の問題 →";
+  sectNext.onclick = ()=>{ sectIndex++; renderSectQuestion(); };
+}
+
+resetSectQuiz();
 
 /* ---------- pollination mini quiz ---------- */
 const pollinateExamples = [
@@ -1268,6 +1497,7 @@ function statLabel(key){
   }
   if(cat==='pol') return `${parts[1]}（虫媒花/風媒花）`;
   if(cat==='poln') return `${parts[1]}（花粉の形）`;
+  if(cat==='sect') return `${parts[1]}（単子葉/双子葉）`;
   return key;
 }
 function accuracyColor(acc){
@@ -1312,6 +1542,9 @@ function renderProgress(){
       }).join('')
     : `<div class="empty-msg">今のところ苦手な項目はありません。各クイズの「苦手だけ出題」で仕上げの復習ができます。</div>`;
 
+  const sectKeys = FLOWERS.map(f=>`sect|${f.name}`).filter(k=>{ const s=STATS[k]; return s && (s.c+s.w)>0; });
+  renderProgressRows(document.getElementById('sectProgress'), sectKeys);
+
   const numKeys = [];
   FLOWERS.forEach(f=> PARTS.forEach(p=> numKeys.push(`num|${f.name}|${p.key}`)));
   renderProgressRows(document.getElementById('numProgress'), numKeys.filter(k=>{ const s=STATS[k]; return s && (s.c+s.w)>0; }));
@@ -1346,6 +1579,7 @@ let finalQueue = [], finalIndex = 0, finalCorrect = 0;
 function buildFinalQueue(){
   const items = [];
   FLOWERS.forEach(f=> PARTS.forEach(p=> { if(!(f.skipQuiz && f.skipQuiz.includes(p.key))) items.push({kind:'num', f, p}); }));
+  FLOWERS.forEach(f=> items.push({kind:'sect', f}));
   pollinateExamples.forEach(it=> items.push({kind:'pol', item:it}));
   POLLEN.forEach(it=> items.push({kind:'poln', item:it}));
   shuffleArr(items);
@@ -1373,6 +1607,14 @@ function renderFinalQ(){
     promptHtml = `<div class="q-flower">${q.f.name}（${q.f.fam}）</div><b>${q.p.label}</b>の数はいくつ？`;
     correctVal = q.f[q.p.key]; unit = q.p.unit;
     getChoices = ()=> choiceSet(correctVal).map(v=>({label:v+unit, ok:v===correctVal}));
+  } else if(q.kind === 'sect'){
+    diagramHtml = diagramSVG(q.f,110).replace('<svg','<svg class="q-diagram"');
+    promptHtml = `<div class="q-flower">${q.f.name}（${q.f.fam}）</div>単子葉類？ それとも双子葉類？`;
+    correctVal = q.f.sect;
+    getChoices = ()=> shuffleArr([
+      {label:"🌾 単子葉類", ok: correctVal==="単子葉類"},
+      {label:"🌿 双子葉類", ok: correctVal==="双子葉類"},
+    ]);
   } else if(q.kind === 'pol'){
     promptHtml = `<div class="q-flower">${q.item.name}</div>虫媒花？ それとも風媒花？`;
     correctVal = q.item.type;
@@ -1407,7 +1649,7 @@ function renderFinalQ(){
     b.addEventListener('click', ()=>{
       b.classList.add(ok?'correct':'wrong');
       ok ? playCorrect() : playWrong();
-      const statKey = q.kind==='num' ? `num|${q.f.name}|${q.p.key}` : q.kind==='pol' ? `pol|${q.item.name}` : `poln|${q.item.name}`;
+      const statKey = q.kind==='num' ? `num|${q.f.name}|${q.p.key}` : q.kind==='sect' ? `sect|${q.f.name}` : q.kind==='pol' ? `pol|${q.item.name}` : `poln|${q.item.name}`;
       recordStat(statKey, ok);
       noteResult(ok);
       if(ok){
