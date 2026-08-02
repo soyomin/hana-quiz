@@ -535,6 +535,24 @@
     margin:0 0 8px;
     font-size:15px;
   }
+  .rule-box summary{
+    margin:0;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    list-style:none;
+  }
+  .rule-box summary::-webkit-details-marker{ display:none; }
+  .rule-box summary::after{
+    content:"（タップして開く）";
+    margin-left:6px;
+    font-size:11px;
+    font-weight:400;
+    color:var(--ink-soft);
+  }
+  .rule-box[open] summary::after{ content:"（タップして閉じる）"; }
+  .rule-box[open] summary{ margin-bottom:8px; }
+  .rule-box p:first-of-type{ margin-top:0; }
   .rule-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -886,8 +904,8 @@
     <button class="reset-btn" id="resetStatsBtn">記録をリセット</button>
   </section>
 
-  <div class="rule-box">
-    <h3>🔑 秘密の合言葉：花びらの数でなかまがわかる</h3>
+  <details class="rule-box">
+    <summary>🔑 秘密の合言葉：花びらの数でなかまがわかる</summary>
     <p>アブラナの花びらは4枚でした。実はこれ、丸暗記する数字じゃなくて「なかま分けの合言葉」なんです。</p>
     <div class="rule-grid">
       <div class="rule-card">
@@ -900,7 +918,7 @@
       </div>
     </div>
     <p style="margin-top:14px;">つまり「花びらを数える→単子葉か双子葉かがわかる」という順番で考えると、数字はただの暗記じゃなくなります。</p>
-  </div>
+  </details>
 
   <footer class="note">写真の手書きノートをもとに作成。ジャガイモのおしべは「5本」で登録（赤字修正メモに合わせて確認済み）。</footer>
 </div>
