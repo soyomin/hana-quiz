@@ -584,8 +584,8 @@
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="why">🕵️ なぜその数？</button>
-    <button role="tab" aria-selected="false" data-tab="whyQuiz">🔍 単子葉クイズ</button>
+    <button role="tab" aria-selected="true" data-tab="whyQuiz">🔍 単子葉クイズ</button>
+    <button role="tab" aria-selected="false" data-tab="why">🕵️ なぜその数？</button>
     <button role="tab" aria-selected="false" data-tab="quiz">② 数字テスト</button>
     <button role="tab" aria-selected="false" data-tab="pollinate">③ 虫媒花・風媒花</button>
     <button role="tab" aria-selected="false" data-tab="pollinateQuiz">④ 虫媒花クイズ</button>
@@ -595,7 +595,7 @@
     <button role="tab" aria-selected="false" data-tab="progress">📊 達成度</button>
   </nav>
 
-  <section class="panel" id="panel-why" role="tabpanel">
+  <section class="panel" id="panel-why" role="tabpanel" hidden>
     <div class="toggle" id="storyToggle">
       <button data-story="abrana" aria-pressed="true">🌱 アブラナ</button>
       <button data-story="tulip" aria-pressed="false">🌷 チューリップ</button>
@@ -769,7 +769,7 @@
     </div>
   </section>
 
-  <section class="panel" id="panel-whyQuiz" role="tabpanel" hidden>
+  <section class="panel" id="panel-whyQuiz" role="tabpanel">
     <div class="toggle" style="margin-bottom:8px;">
       <button id="weakOnlySectBtn" aria-pressed="false">🔁 苦手だけ出題</button>
     </div>
